@@ -57,12 +57,29 @@ Untuk simulasi serangan ini, saya tidak menggunakan PowerShell Empire untuk meng
 
 ## Tahap Kelima (Payload dengan Permintaan API OneDrive)
 
-Payload ini membentuk komunikasi tersembunyi melalui socket ke server jarak jauh, menyamarkan lalu lintas dalam permintaan API OneDrive. Payload ini mengidentifikasi mesin dengan menghitung checksum CRC32 dari MachineGuid. Perintah dijalankan secara lokal, dengan output dikirim kembali ke server atau diunggah ke OneDrive. Konfigurasinya yang dinamis memungkinkan kontrol jarak jauh dan eksfiltrasi data yang fleksibel dan tersembunyi.
+Payload ini membentuk komunikasi tersembunyi melalui socket ke server jarak jauh, menyamarkan lalu lintas dalam permintaan API OneDrive. Payload ini mengidentifikasi mesin dengan menggunakan checksum CRC32 dari MachineGuid. Perintah dijalankan secara lokal, dengan output dikirim kembali ke server atau diunggah ke OneDrive. Konfigurasi dinamisnya memungkinkan kontrol jarak jauh yang fleksibel dan eksfiltrasi data yang tersembunyi.
 
 ![Screenshot from 2024-04-14 16-59-47](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/b784cfdd-e83e-41b3-857b-23e56396312d)
 
 1. **Komunikasi Tersembunyi**: Payload memulai koneksi socket ke alamat IP dan port yang ditentukan.
   
-2. **Mekanisme Identifikasi**: Mengambil MachineGuid dari registry Windows dan menghitung checksum CRC32-nya.
+2. **Mekanisme Identifikasi**: Mengambil MachineGuid dari registri Windows dan menghitung checksum CRC32-nya.
 
-![171246184-aaf02b50-bc11-4d82-8327-b8a8e3e9f0ec](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/ebc2f08b-71d7-4cfb-9fd3-417d35132091)
+![171351508026027259](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/ba5979bc-eb9b-4e98-b74a-002e6846ff36)
+
+3. **Eksekusi Perintah**: Payload memasuki loop untuk menerima perintah dari server jarak jauh atau OneDrive.
+
+4. **Eksfiltrasi Data**: Setelah eksekusi, payload menangkap output dan mengirimkannya kembali ke server atau mengunggahnya ke OneDrive.
+
+5. **Komunikasi Tersembunyi**: Dengan memanfaatkan API OneDrive, lalu lintas jaringan disamarkan dengan lalu lintas sah OneDrive.
+
+6. **Konfigurasi Dinamis**: Perilaku dikonfigurasi dengan menentukan alamat IP, port, dan opsional token akses untuk OneDrive.
+
+![Screenshot from 2024-04-14 22-43-29](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/b2eda097-d7f7-48ab-823d-f720badf69f1)
+
+## Hasil Akhir: Payload Terhubung ke Server C2 OneDrive
+
+Langkah terakhir dalam proses ini melibatkan eksekusi payload akhir. Setelah didekripsi dan dimuat ke dalam proses saat ini, payload akhir dirancang untuk berkomunikasi dengan server C2 berbasis API OneDrive.
+
+https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/becef683-c49b-40d5-9047-d8e8c6303eaa
+
