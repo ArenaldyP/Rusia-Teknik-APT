@@ -1,111 +1,68 @@
-# Fancy Bear APT28 Adversary Simulation
-This is a simulation of attack by Fancy Bear group (APT28) targeting high-ranking government officials Western Asia and Eastern Europe
-the attack campaign was active from October to November 2021, The attack chain starts with the execution of an Excel downloader sent 
-to the victim via email which exploits an MSHTML remote code execution vulnerability (CVE-2021-40444) to execute a malicious executable
-in memory, I relied on trellix tofigure out the details to make this simulation: https://www.trellix.com/blogs/research/prime-ministers-office-compromised/
+# Simulasi Adversari Fancy Bear APT28
 
+Ini adalah simulasi serangan oleh grup Fancy Bear (APT28) yang menargetkan pejabat tinggi pemerintah di Asia Barat dan Eropa Timur. Kampanye serangan ini aktif dari Oktober hingga November 2021. Rantai serangan dimulai dengan eksekusi pengunduh Excel yang dikirim ke korban melalui email, yang memanfaatkan kerentanan eksekusi kode jarak jauh MSHTML (CVE-2021-40444) untuk menjalankan executable berbahaya di memori. Saya mengandalkan informasi dari Trellix untuk detail simulasi ini: [Trellix Blog](https://www.trellix.com/blogs/research/prime-ministers-office-compromised/)
 
 ![photo_2024-04-06_23-42-01](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/bd9e3d64-a453-4aaf-9653-255a0cf4fe68)
 
-This attack included several stages including exploitation of the CVE-2021-40444 vulnerability through which remote access execution can be accessed through word file this is done by injecting the DLL into Word file through this exploit, Also use OneDrive c2 Server to get command and control and this is to data exfiltration with hide malicious activities among the legitimate traffic to OneDrive.
+Serangan ini mencakup beberapa tahap, termasuk eksploitasi kerentanan CVE-2021-40444 di mana eksekusi jarak jauh dapat diakses melalui file Word. Hal ini dilakukan dengan menyuntikkan DLL ke dalam file Word melalui eksploitasi ini, serta menggunakan server C2 OneDrive untuk mengambil alih kontrol dan eksfiltrasi data, dengan menyembunyikan aktivitas berbahaya di antara lalu lintas sah ke OneDrive.
 
-
-1.Create dll downloads files through base64, This is to download two files the first is (dfsvc.dll) the second is (Stager.dll).
-
-2.Exploiting the zero-day vulnerability to inject the DLL file into Word File and create an execution for DLL by opening Word File.
-
-3.Word File is running and the actual payload is downloaded through DLLDownloader.dll and we have two files Stager.dll and dfsvc.dll.
-
-
-4.The Stager decrypts the actual payload and runs it which in turn is responsible for command and control.
-
-5.Data exfiltration over OneDrive API C2 Channe, This integrates OneDrive API functionality to facilitate communication between the compromised system and the attacker-controlled server thereby potentially hiding the traffic within legitimate OneDrive communication.
-
-6.Get Command and Control through payload uses the OneDrive API to upload data including command output to OneDrive, the payload calculates the CRC32 checksum of the MachineGuid and includes it in the communication with the server for identification purposes.
-
+1. Buat DLL yang mengunduh file melalui base64 untuk mengunduh dua file, yaitu `dfsvc.dll` dan `Stager.dll`.
+2. Mengeksploitasi kerentanan zero-day untuk menyuntikkan file DLL ke dalam File Word dan menjalankan DLL saat file Word dibuka.
+3. File Word menjalankan payload asli melalui DLLDownloader.dll dan mengunduh dua file `Stager.dll` dan `dfsvc.dll`.
+4. Stager mendekripsi payload asli dan menjalankannya yang bertanggung jawab untuk perintah dan kontrol.
+5. Eksfiltrasi data melalui OneDrive API C2 Channel, yang mengintegrasikan fungsionalitas API OneDrive untuk memfasilitasi komunikasi antara sistem yang dikompromikan dan server yang dikendalikan oleh penyerang, sehingga berpotensi menyembunyikan lalu lintas dalam komunikasi OneDrive yang sah.
+6. Mendapatkan Perintah dan Kontrol melalui payload yang menggunakan API OneDrive untuk mengunggah data, termasuk output perintah ke OneDrive. Payload menghitung checksum CRC32 dari MachineGuid dan memasukkannya dalam komunikasi dengan server untuk identifikasi.
 
 ![Screenshot from 2024-04-08 01-28-29](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/d6d418db-2d9a-4e4c-94fb-74596207d95a)
 
-## The first stage (delivery technique)
+## Tahap Pertama (Teknik Pengiriman)
 
-First the attackers created DLL executable (DLLDownloader.dll) this DLL it can download two payloads by command line to make payload base64 
-`base64 dfsvc.dll -w 0` and `base64 Stager.dll  -w 0` the first is (dfsvc.dll) the second is (Stager.dll), This DLL will be used in the next stage by injecting it into a Word file via the Zero-day vulnerability.
-
+Pertama, penyerang membuat executable DLL (DLLDownloader.dll) yang dapat mengunduh dua payload melalui command line untuk membuat payload base64 `base64 dfsvc.dll -w 0` dan `base64 Stager.dll -w 0`, di mana yang pertama adalah `dfsvc.dll` dan yang kedua adalah `Stager.dll`. DLL ini akan digunakan pada tahap berikutnya dengan menyuntikkannya ke dalam file Word melalui kerentanan Zero-day.
 
 ![Screenshot from 2024-04-16 21-38-27](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/d4fdc9a2-5268-42cf-98b0-4e8aff660ac6)
 
-## The Second stage (implanting technique)
+## Tahap Kedua (Teknik Implantasi)
 
-second the attackers exploited the Zero-day vulnerability (CVE-2021-40444) https://github.com/lockedbyte/CVE-2021-40444/
-this vulnerability works by injecting a DLL file into Microsoft Word When the file is opened it executes the DLL payload, which is responsible for downloading two other payload (dfsvc.dll) and (Stager.dll).
+Kedua, penyerang mengeksploitasi kerentanan Zero-day (CVE-2021-40444) [GitHub: CVE-2021-40444](https://github.com/lockedbyte/CVE-2021-40444/) yang bekerja dengan menyuntikkan file DLL ke dalam Microsoft Word. Saat file dibuka, payload DLL dieksekusi, yang bertanggung jawab untuk mengunduh dua payload lainnya (`dfsvc.dll` dan `Stager.dll`).
 
 ![Screenshot from 2024-04-13 01-09-30](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/e03bfa09-ed13-4ddc-bf41-64d97187099b)
 
-When a victim opens the malicious Office document using Microsoft Office, the application parses the document's content, including the embedded objects. The flaw in the MSHTML component is triggered during this parsing process, allowing the attacker's malicious code to be executed within the context of the Office application.
+Ketika korban membuka dokumen Office berbahaya menggunakan Microsoft Office, aplikasi memproses konten dokumen, termasuk objek yang disematkan. Cacat dalam komponen MSHTML dipicu selama proses ini, memungkinkan kode berbahaya penyerang untuk dieksekusi dalam konteks aplikasi Office.
 
-## The third stage (execution technique)
+## Tahap Ketiga (Teknik Eksekusi)
 
-Now i have a Word file when i open it performs an execution for the DLL Downloader and thus downloads the two files (dfsvc.dll) and (Stager.dll) this is through the  vulnerability CVE-2021-40444.
+Sekarang, saat file Word dibuka, file tersebut menjalankan eksekusi untuk DLL Downloader dan mengunduh dua file `dfsvc.dll` dan `Stager.dll` melalui kerentanan CVE-2021-40444.
 
 ![Screenshot from 2024-04-16 17-21-17](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/b496b5a9-28e9-49f1-a5c7-8324913cbf2f)
 
-After that the stager decrypts the payload using the Decrypt-Payload function (you need to implement the decryption algorithm) and then executes the payload using the Execute-Payload function, In this simulation i made the build perform an execution directly without the need for the stager script, and it can be modified to suit the stager making an execution for the actual payload.
-
+Setelah itu, stager mendekripsi payload menggunakan fungsi `Decrypt-Payload` (perlu menerapkan algoritma dekripsi) dan kemudian mengeksekusi payload menggunakan fungsi `Execute-Payload`. Dalam simulasi ini, saya membuat build yang menjalankan eksekusi langsung tanpa perlu script stager, dan dapat disesuaikan agar stager mengeksekusi payload sebenarnya.
 
 ![Screenshot from 2024-04-16 17-59-42](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/30729f3f-d294-4ccc-82c3-7f1821f792df)
 
-## The fourth stage (Data Exfiltration) over OneDrive API C2 Channe
+## Tahap Keempat (Eksfiltrasi Data) melalui OneDrive API C2 Channel
 
-The attackers used the OneDrive C2 (Command and Control) API as a means to establish a communication channel between their payload and the attacker's server, 
-By using OneDrive as a C2 server, attackers can hide their malicious activities among the legitimate traffic to OneDrive, making it harder for security teams to detect the threat. First, we need to create a Microsoft Azure account and activate its permissions, as shown in the following figure.
+Penyerang menggunakan OneDrive C2 API sebagai sarana untuk menjalin saluran komunikasi antara payload mereka dan server yang dikendalikan penyerang. Dengan menggunakan OneDrive sebagai server C2, penyerang dapat menyembunyikan aktivitas berbahaya di antara lalu lintas sah ke OneDrive, membuatnya lebih sulit bagi tim keamanan untuk mendeteksi ancaman. Pertama, kami perlu membuat akun Microsoft Azure dan mengaktifkan izin-izinnya.
 
-We will use the Application (client) ID for the inputs needed by the C2 server
+Kami akan menggunakan Application (client) ID sebagai input yang diperlukan oleh server C2.
 
 ![photo_2024-04-14_16-24-06](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/6e73395a-2221-411b-ab4a-e6c23f2b2897)
 
-After that, we will go to the Certificates & secrets menu to generate the Secret ID for the Microsoft Azure account, and this is what we will use in OneDrive C2.
+Setelah itu, kami akan pergi ke menu Certificates & secrets untuk menghasilkan Secret ID untuk akun Microsoft Azure, dan ini yang akan kami gunakan di OneDrive C2.
 
 ![photo_2024-04-14_16-24-14](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/fec5b59d-57ed-47f4-b640-d06782d8c16b)
 
-To make simulation of this attack at the present time i did not use the PowerShell Empire to avoid detection and i make customization of the OneDrive C2 server,
-This script integrates OneDrive API functionality to facilitate communication between the compromised system and the attacker-controlled server, thereby potentially hiding the traffic within legitimate OneDrive communication and i used AES Encryption to secure the connection just like the PowerShell Empire  server that the attackers used in the actual attack, The customization OneDrive C2 Server inspired by PowerShell Empire.
+Untuk simulasi serangan ini, saya tidak menggunakan PowerShell Empire untuk menghindari deteksi, melainkan melakukan kustomisasi pada server C2 OneDrive. Script ini mengintegrasikan fungsionalitas API OneDrive untuk memfasilitasi komunikasi antara sistem yang dikompromikan dan server yang dikendalikan penyerang, serta menggunakan enkripsi AES untuk mengamankan koneksi seperti yang dilakukan server PowerShell Empire dalam serangan sebenarnya.
 
 ![photo_2024-04-14_02-55-02](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/0e4a4178-053b-493d-90b2-f0988d80f5da)
 
-## The fifth stage (payload with OneDrive API requests)
+## Tahap Kelima (Payload dengan Permintaan API OneDrive)
 
-This payload establishes covert communication via socket to a remote server, disguising traffic within OneDrive API requests. It identifies machines using CRC32 checksums of their MachineGuids. Commands are executed locally, with outputs sent back to the server or uploaded to OneDrive. Its dynamic configuration enables flexible and stealthy remote control and data exfiltration.
+Payload ini membentuk komunikasi tersembunyi melalui socket ke server jarak jauh, menyamarkan lalu lintas dalam permintaan API OneDrive. Payload ini mengidentifikasi mesin dengan menghitung checksum CRC32 dari MachineGuid. Perintah dijalankan secara lokal, dengan output dikirim kembali ke server atau diunggah ke OneDrive. Konfigurasinya yang dinamis memungkinkan kontrol jarak jauh dan eksfiltrasi data yang fleksibel dan tersembunyi.
 
 ![Screenshot from 2024-04-14 16-59-47](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/b784cfdd-e83e-41b3-857b-23e56396312d)
 
-
-1.Covert communication: The payload initiates a socket connection to a specified IP address and port.
+1. **Komunikasi Tersembunyi**: Payload memulai koneksi socket ke alamat IP dan port yang ditentukan.
   
-2.Identification mechanism: It retrieves the MachineGuid from the Windows registry and calculates its CRC32 checksum.
+2. **Mekanisme Identifikasi**: Mengambil MachineGuid dari registry Windows dan menghitung checksum CRC32-nya.
 
-![171351508026027259](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/ba5979bc-eb9b-4e98-b74a-002e6846ff36)
-
-
-3.Command execution: The payload enters a loop to receive commands from the remote server or OneDrive.
-
-4.Data exfiltration: After execution it captures output and sends it back to the server or uploads it to OneDrive.
-
-5.Stealthy communication: Utilizing OneDrive API it blends network traffic with legitimate OneDrive traffic.
-
-6.Dynamic configuration: Behavior is configured by specifying IP address, port and optionally an access token for OneDrive.
-
-
-![Screenshot from 2024-04-14 22-43-29](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/b2eda097-d7f7-48ab-823d-f720badf69f1)
-
-## Final result: payload connect to OneDrive C2 server
-
-the final step in this process involves the execution of the final payload. After being decrypted and loaded into the current process, the final payload is designed to beacon out to both OneDrive API-based C2 server.
-
-
-
-
-https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/becef683-c49b-40d5-9047-d8e8c6303eaa
-
-
-
-
+![171246184-aaf02b50-bc11-4d82-8327-b8a8e3e9f0ec](https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/ebc2f08b-71d7-4cfb-9fd3-417d35132091)
