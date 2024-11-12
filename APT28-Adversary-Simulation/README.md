@@ -2,7 +2,7 @@
 
 Ini adalah simulasi serangan oleh grup Fancy Bear (APT28) yang menargetkan pejabat tinggi pemerintah di Asia Barat dan Eropa Timur. Kampanye serangan ini aktif dari Oktober hingga November 2021. Rantai serangan dimulai dengan eksekusi pengunduh Excel yang dikirim ke korban melalui email, yang memanfaatkan kerentanan eksekusi kode jarak jauh MSHTML (CVE-2021-40444) untuk menjalankan executable berbahaya di memori. Saya mengandalkan informasi dari Trellix untuk detail simulasi ini: [Trellix Blog](https://www.trellix.com/blogs/research/prime-ministers-office-compromised/)
 
-![photo_2024-04-06_23-42-01]([https://github.com/S3N4T0R-0X0/APT28-Adversary-Simulation/assets/121706460/bd9e3d64-a453-4aaf-9653-255a0cf4fe68](https://github.com/ArenaldyP/Rusia-Teknik-APT/blob/main/APT28-Adversary-Simulation/Images/Fancy_Bear.jpg?raw=true))
+![photo_2024-04-06_23-42-01]([https://github.com/ArenaldyP/Rusia-Teknik-APT/blob/main/APT28-Adversary-Simulation/Images/Fancy_Bear.jpg?raw=true])
 
 Serangan ini mencakup beberapa tahap, termasuk eksploitasi kerentanan CVE-2021-40444 di mana eksekusi jarak jauh dapat diakses melalui file Word. Hal ini dilakukan dengan menyuntikkan DLL ke dalam file Word melalui eksploitasi ini, serta menggunakan server C2 OneDrive untuk mengambil alih kontrol dan eksfiltrasi data, dengan menyembunyikan aktivitas berbahaya di antara lalu lintas sah ke OneDrive.
 
