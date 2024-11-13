@@ -1,120 +1,95 @@
 # Cozy Bear APT29 Adversary Simulation
 
-This is a simulation of attack by the Cozy Bear group (APT-29) targeting diplomatic missions.
-The campaign began with an innocuous and legitimate event. In mid-April 2023, a diplomat within the Polish Ministry of Foreign Affairs emailed his legitimate flyer to various embassies advertising the sale of a used BMW 5-series sedan located in Kyiv. The file was titled BMW 5 for sale in Kyiv - 2023.docx.
-I relied on palo alto to figure out the details to make this simulation: https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
+Ini adalah simulasi serangan oleh grup Cozy Bear (APT-29) yang menargetkan misi diplomatik. Kampanye dimulai dengan acara yang tampak sah. Pada pertengahan April 2023, seorang diplomat di Kementerian Luar Negeri Polandia mengirimkan brosur resmi yang berisi penawaran penjualan BMW 5-series bekas yang berlokasi di Kyiv. File tersebut berjudul "BMW 5 for sale in Kyiv - 2023.docx." Saya mengandalkan sumber dari Palo Alto untuk menyusun detail simulasi ini: https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
 
 ![photo_2024-04-12_01-35-08](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/891d43ef-b749-4c08-ab60-df2df85e620d)
 
+## Tahapan Serangan
 
+1. **File DOCX**: File DOCX berisi hyperlink yang mengarahkan untuk mengunduh file HTML tambahan (teknik HTML smuggling).
+   
+2. **HTML Smuggling**: Penyerang menggunakan HTML smuggling untuk menyembunyikan file ISO.
 
-1.DOCX file: created DOCX file includes a Hyperlink that leads to downloading further HTML (HTML smuggling file).
+3. **File LNK**: Ketika file LNK (shortcut) dieksekusi, mereka menjalankan EXE yang sah dan membuka file PNG. Namun, di balik layar, shellcode terenkripsi dibaca ke dalam memori dan didekripsi.
 
-2.HTML Smuggling: The attackcers  use the of HTML smuggling to obscure the ISO file.
+4. **File ISO**: File ISO berisi sejumlah file LNK yang menyamar sebagai gambar. File LNK ini digunakan untuk mengeksekusi payload berbahaya.
 
-3.LNK files: When the LNK files (shortcut) are executed they run a legitimate EXE and open a PNG file. However, behind the scenes, encrypted shellcode is read into memory and decrypted.
+5. **DLL Hijacking**: File EXE memuat DLL berbahaya melalui DLL hijacking, memungkinkan penyerang untuk menjalankan kode arbitrer dalam konteks proses yang terinfeksi.
 
-4.ISO file: The ISO file contains a number of LNK files that are masquerading as images. These LNK files are used to execute the malicious payload.
+6. **Injeksi Shellcode**: Shellcode yang telah didekripsi kemudian diinjeksikan ke dalam proses Windows yang sedang berjalan, memberi penyerang kemampuan untuk menjalankan kode dengan hak istimewa proses yang terinfeksi.
 
-5.DLL hijacking: The EXE file loads a malicious DLL via DLL hijacking, which allows the attacker to execute arbitrary code in the context of the infected process.
+7. **Eksekusi Payload**: Shellcode mendekripsi dan memuat payload akhir di dalam proses saat ini.
 
-6.Shellcode injection: The decrypted shellcode is then injected into a running Windows process, giving the attacker the ability to execute code with the privileges of the infected process.
-
-7.Payload execution: The shellcode decrypts and loads the final payload inside the current process.
-
-8.Dropbox C2: This payload beacons to Dropbox and Primary/Secondary C2s based on the Microsoft Graph API.
+8. **Dropbox C2**: Payload ini berkomunikasi dengan Dropbox dan C2 Primer/Sekunder berdasarkan Microsoft Graph API.
 
 ![Screenshot from 2024-03-11 15-43-36](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/ff510ffd-3481-4978-bedc-d30629d65307)
 
+## Tahap Pertama (Teknik Pengiriman)
 
-
-## The first stage (delivery technique)
-
-First the attackers created DOCX file includes a Hyperlink that leads to downloading further HTML (HTML smuggling file)
-The advantage of the hyperlink is that it does not appear in texts, and this is exactly what the attackers wanted to exploit.
-
+Pada tahap pertama, penyerang membuat file DOCX yang berisi hyperlink yang mengarah untuk mengunduh HTML (HTML smuggling file). Keunggulan hyperlink adalah bahwa ini tidak muncul dalam teks, dan ini adalah celah yang dieksploitasi oleh penyerang.
 
 ![Screenshot from 2024-03-01 19-18-51](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/bb984b9c-5367-4fb2-9efc-3be7c098ec46)
 
-
-HTML Smuggling used to obscure ISO file and the ISO contains a number of LNK files masquerading as images
-command line to make payload base64 to then put it in the HTML smuggling file:
-`base64 payload.iso -w 0` and i added a picture of the BMW car along with the text content of the phishing message in the HTML file. 
+HTML Smuggling digunakan untuk menyembunyikan file ISO yang berisi sejumlah file LNK yang menyamar sebagai gambar.
+Command line untuk membuat payload Base64 untuk HTML smuggling file:
+`base64 payload.iso -w 0` dan saya menambahkan gambar mobil BMW beserta teks konten pesan phishing di dalam file HTML.
 
 ![Screenshot from 2024-03-01 19-39-42](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/8e76572b-5d72-4d87-9cf9-4c7bf002c801)
 
+## Tahap Kedua (Teknik Penanaman)
 
-## The Second stage (implanting technique)
-
-We now need to create a PNG image that contains images of the BMW car, but in the background when the image is opened, the malware is running in the background,
-at this stage i used the WinRAR program to make the image open with Command Line execution via CMD when opening the image and I used an image in icon format.
-
+Selanjutnya kita membuat gambar PNG yang berisi gambar mobil BMW, tetapi di latar belakang saat gambar dibuka, malware berjalan di latar belakang. Di tahap ini, saya menggunakan program WinRAR untuk membuka gambar dengan eksekusi Command Line melalui CMD saat membuka gambar dan menggunakan gambar dalam format ikon.
 
 ![20240302_194641](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/b3b7872e-1bf9-4637-a13f-ba720c113276)
 
-After using WinRaR for this compressed file, we will make a short cut of this file and put it in another file with the actual images then we will convert it to an ISO file through the PowerISO program.
+Setelah menggunakan WinRAR untuk file terkompresi ini, kita membuat shortcut file ini dan menempatkannya di file lain dengan gambar asli, lalu mengonversinya menjadi file ISO melalui program PowerISO.
 
-Note: This iso file is the one to which we will make base64 for this iso file and put in the html smuggling file before make hyperlink and place it in the docx file.
+Catatan: File ISO ini yang akan dibuat Base64 dan dimasukkan ke dalam HTML smuggling file sebelum membuat hyperlink dan menempatkannya di file DOCX.
 
 ![Screenshot from 2024-03-02 15-39-55](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/40fef200-416c-4de4-8999-f154a01b22dd)
 
+## Tahap Ketiga (Teknik Eksekusi)
 
-
-## The third stage (execution technique)
-
-Because i put the command line in the setup (run after extraction) menu in the Advanced SFX options for the WinRaR program now when the victim open the ISO file to see the high-quality images for the BMW car according to the phishing message he had previously received he will execute the payload with opening the actual image of the BMW car.
-
-
+Karena saya memasukkan command line dalam menu setup (run after extraction) di Advanced SFX options WinRAR, ketika korban membuka file ISO untuk melihat gambar berkualitas tinggi BMW sesuai pesan phishing yang diterima sebelumnya, payload akan dijalankan bersamaan dengan pembukaan gambar asli BMW.
 
 https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/343e37ce-28e0-4a52-8a68-673bfcc68ffe
 
+## Tahap Keempat (Eksfiltrasi Data) melalui Channel Dropbox API C2
 
-
-## The fourth stage (Data Exfiltration) over Dropbox API C2 Channe
-
-The attackers used the Dropbox C2 (Command and Control) API as a means to establish a communication channel between their payload and the attacker's server. By using Dropbox as a C2 server, attackers can hide their malicious activities among the legitimate traffic to Dropbox, making it harder for security teams to detect the threat.
-First, we need to create a Dropbox account and activate its permissions, as shown in the following figure.
+Penyerang menggunakan Dropbox C2 (Command and Control) API sebagai cara untuk membangun saluran komunikasi antara payload mereka dan server penyerang. Dengan menggunakan Dropbox sebagai server C2, penyerang dapat menyembunyikan aktivitas berbahaya di antara lalu lintas sah Dropbox, sehingga lebih sulit dideteksi oleh tim keamanan. Pertama, kita perlu membuat akun Dropbox dan mengaktifkan izin, seperti pada gambar berikut.
 
 ![Screenshot from 2024-03-12 16-10-13](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/518a643a-f8bc-455c-acdd-a6ed6fe8735a)
 
-
-After that, we will go to the settings menu to generate the access token for the Dropbox account, and this is what we will use in Dropbox C2.
+Setelah itu, kita masuk ke menu pengaturan untuk menghasilkan token akses untuk akun Dropbox, yang akan digunakan dalam Dropbox C2.
 
 ![photo_2024-03-12_16-22-54](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/00e41c7e-b2ac-4805-b1a9-77d00671ebf8)
 
-
-This script integrates Dropbox API functionality to facilitate communication between the compromised system and the attacker-controlled server,
-thereby  hiding the traffic within legitimate Dropbox communication, and take the access token as input prompts the user to enter an AES key 
-(which must be 16, 24, or 32 bytes long) and encrypts the token using AES encryption in ECB mode. It then base64 encodes the encrypted token and returns it.
+Script ini mengintegrasikan fungsionalitas API Dropbox untuk memfasilitasi komunikasi antara sistem yang terkompromi dan server yang dikuasai penyerang, menyembunyikan lalu lintas dalam komunikasi Dropbox yang sah, dan menggunakan token akses sebagai input. Pengguna diminta memasukkan kunci AES (16, 24, atau 32 byte) yang kemudian mengenkripsi token menggunakan enkripsi AES dalam mode ECB dan mengkodekannya dengan Base64.
 
 ![171053992557140444](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/15fdca80-68cb-41ac-9eb5-b56ded6e552e)
 
+Saya menggunakan payload berbasis Python untuk menguji C2 (testing payload.py), jika terdapat masalah dengan koneksi (untuk uji koneksi saja) sebelum menulis payload yang sebenarnya.
 
-I used payload written by Python only to test C2 (testing payload.py), if there were any problems with the connection (just for test connection) before writing the actual payload.
+## Tahap Kelima (Payload dengan DLL Hijacking) dan Injeksi Shellcode
 
-## The fifth stage (payload with DLL hijacking) and injected Shellcode
-
-this payload uses the Dropbox API to upload data, including command output to Dropbox. By leveraging the Dropbox API and providing an access token the payload hides its traffic within the legitimate traffic of the Dropbox servic and If the malicious DLL fails to load, it prints a warning message but continues executing without it.
+Payload ini menggunakan Dropbox API untuk mengunggah data, termasuk output perintah ke Dropbox. Dengan menggunakan Dropbox API dan menyediakan token akses, payload menyembunyikan lalu lintasnya di antara lalu lintas sah dari layanan Dropbox, dan jika DLL berbahaya gagal dimuat, itu akan menampilkan pesan peringatan tetapi terus dieksekusi tanpa itu.
 
 ![Screenshot from 2024-03-23 15-17-27](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/7144331f-5635-49f7-b024-5152cb06cc03)
 
-1.DLL Injection: The payload utilizes DLL hijacking to load a malicious DLL into the address space of a target process.
+1. **DLL Injection**: Payload menggunakan DLL hijacking untuk memuat DLL berbahaya ke dalam ruang alamat dari proses target.
 
-2.Shellcode Execution: Upon successful injection, the malicious DLL executes shellcode stored within its DllMain function.
+2. **Shellcode Execution**: Setelah injeksi berhasil, DLL berbahaya menjalankan shellcode yang disimpan di dalam fungsi DllMain-nya.
 
-3.Memory Allocation: The VirtualAlloc function is employed to allocate memory within the target process, where the shellcode will be injected.
+3. **Memory Allocation**: Fungsi VirtualAlloc digunakan untuk mengalokasikan memori dalam proses target, tempat shellcode akan diinjeksikan.
 
-4.Shellcode Injection: The shellcode is copied into the allocated memory region using memcpy, effectively injecting it into the process.
+4. **Shellcode Injection**: Shellcode disalin ke dalam area memori yang dialokasikan menggunakan memcpy, menginjeksikannya ke dalam proses.
 
-5.Privilege Escalation: If the compromised process runs with elevated privileges, the injected shellcode inherits those privileges, allowing the attacker to perform privileged operations.
+5. **Privilege Escalation**: Jika proses yang terkompromi berjalan dengan hak istimewa yang tinggi, shellcode yang diinjeksikan mewarisi hak tersebut, memungkinkan penyerang melakukan berbagai operasi, seperti mengakses file sistem atau memodifikasi pengaturan sistem.
 
 ![Screenshot from 2024-03-23 15-16-20](https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/29858785-5fc5-446c-a1d0-d0b1bb1e58d7)
 
+### Kesimpulan
 
-## Final result: payload connect to Dropbox C2 server
-
-the final step in this process involves the execution of the final payload. After being decrypted and loaded into the current process,
-the final payload is designed to beacon out to both Dropbox API-based  C2 server. 
+Simulasi ini menunjukkan teknik yang digunakan oleh APT29, termasuk teknik HTML smuggling, DLL hijacking, dan Dropbox API C2, untuk menghindari deteksi. Dengan memahami metodologi ini, kita dapat mempersiapkan langkah-langkah keamanan yang lebih baik untuk mencegah atau mendeteksi aktivitas serupa di masa depan.
 
 https://github.com/S3N4T0R-0X0/APT29-Adversary-Simulation/assets/121706460/c5b7b826-72a1-459e-9f19-6e34bd79aeab
-
