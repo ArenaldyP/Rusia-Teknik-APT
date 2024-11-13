@@ -11,7 +11,7 @@ Berikut adalah semua nama kelompok APT, dan saya telah mensimulasikan satu seran
 
 `RUSIA`🇷🇺️
 1. Cozy Bear APT29   ✅️                                      
-2. Fancy Bear APT28  
+2. Fancy Bear APT28  ✅️
 3. Energetic Bear    
 4. Berserk Bear      
 5. Gossamer Bear     
