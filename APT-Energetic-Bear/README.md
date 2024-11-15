@@ -3,7 +3,8 @@ Ini adalah simulasi serangan oleh kelompok APT (Energetic Bear) yang menargetkan
 Kampanye serangan ini aktif sejak Januari 2014. Rantai serangan dimulai dengan file XDP berbahaya yang berisi eksploitasi PDFSWF (CVE-2011-0611)
 dan digunakan dalam serangan spear-phishing. Eksploitasi ini membuang DLL loader yang disimpan dalam bentuk terenkripsi dalam file XDP.
 Eksploitasi dikirimkan sebagai file XDP (Paket Data XML) yang sebenarnya merupakan file PDF yang dikemas dalam wadah XML. Saya mengandalkan Kaspersky untuk mencari tahu detailnya guna membuat simulasi ini
-httpsmedia.kasperskycontenthub.comwp-contentuploadssites4320180308080817EB-YetiJuly2014-Public.pdf
+
+https://media.kasperskycontenthub.comwp-contentuploadssites4320180308080817EB-YetiJuly2014-Public.pdf
 
 ![imageedit_6_9165265996](https://github.com/S3N4T0R-0X0/Energetic-Bear-APT-Adversary-Simulation/assets/121706460/25bb36f0-0a63-4dbe-941f-dd64ceb05e2f)
 
@@ -46,7 +47,7 @@ kerentanan ini, penyerang dapat mengeksekusi kode arbitrer pada sistem korban.
 
 ![Screenshot from 2024-05-06 05-54-55](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/34bf9736-214b-49e1-89d1-b96570f6b863)
 
-Versi Modifikasi dari exploit CVE-2011-0611 berbasis Windows 10, exploit asli dari httpsgithub.comrapid7metasploit-frameworkblobmastermodulesexploitswindowsbrowseradobe_flashplayer_flash10o.rb
+Versi Modifikasi dari exploit CVE-2011-0611 berbasis Windows 10, exploit asli dari https://github.comrapid7metasploit-frameworkblobmastermodulesexploitswindowsbrowseradobe_flashplayer_flash10o.rb
 
 ## Tahap Kedua (CVE-2012-1723 Oracle Java Applet Field Bytecode Verifier Cache RCE)
 
