@@ -6,7 +6,8 @@ Eksploitasi dikirimkan sebagai file XDP (Paket Data XML) yang sebenarnya merupak
 
 https://media.kasperskycontenthub.comwp-contentuploadssites4320180308080817EB-YetiJuly2014-Public.pdf
 
-![imageedit_6_9165265996](https://github.com/S3N4T0R-0X0/Energetic-Bear-APT-Adversary-Simulation/assets/121706460/25bb36f0-0a63-4dbe-941f-dd64ceb05e2f)
+![1](https://github.com/user-attachments/assets/efe8671a-8d0e-4d59-950f-f5e28d655522)
+
 
 Serangan ini mencakup beberapa tahap, termasuk eksploitasi kerentanan (CVE-2011-0611) yang memungkinkan penyerang untuk menimpa pointer dalam memori dengan menanamkan .swf yang dibuat khusus. File XDP berisi eksploitasi SWF CVE-2011-0611 dan dua file yang dienkripsi dengan XOR disimpan dalam file XDP. Salah satu file adalah DLL berbahaya, yang lainnya adalah file JAR yang digunakan untuk menyalin dan menjalankan DLL dengan menjalankan baris perintah Cmd
 
@@ -28,7 +29,7 @@ Serangan ini mencakup beberapa tahap, termasuk eksploitasi kerentanan (CVE-2011-
 
 9. Hasil akhir melakukan komunikasi jarak jauh dengan memanfaatkan enkripsi XOR untuk transmisi data yang aman antara server penyerang dan target.
 
-![Screenshot from 2024-05-04 17-37-00](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/5cd199b5-9af1-4258-b5de-ecdf4e97cca1)
+![2](https://github.com/user-attachments/assets/b350c15b-21b8-4e8c-8e1f-188bd586c2e2)
 
 ## Tahap pertama (eksploitasi Kerentanan Korupsi Memori Adobe SWF CVE-2011-0611)
 
@@ -37,7 +38,8 @@ versi 10.2.153.1 dan versi sebelumnya. Kerentanan ini memungkinkan eksekusi kode
 mengeksploitasi kelemahan dalam cara Adobe Flash Player menangani file .swf tertentu yang dibuat. Dengan memanfaatkan
 kerentanan ini, penyerang dapat mengeksekusi kode arbitrer pada sistem korban.
 
-![Screenshot from 2024-05-02 10-49-29](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/43751d02-3289-42ed-9971-90c34e0bbdcd)
+![3](https://github.com/user-attachments/assets/5e4c50a5-50d7-434a-b295-05737514c927)
+
 
 `sudo cp EnergeticBear_exploit.rb usrsharemetasploit-frameworkmodulesexploits`
 
@@ -45,7 +47,8 @@ kerentanan ini, penyerang dapat mengeksekusi kode arbitrer pada sistem korban.
 
 `msf6  search EnergeticBear_exploit`
 
-![Screenshot from 2024-05-06 05-54-55](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/34bf9736-214b-49e1-89d1-b96570f6b863)
+![4](https://github.com/user-attachments/assets/3b3ce655-6ae0-4174-8655-11737492fd47)
+
 
 Versi Modifikasi dari exploit CVE-2011-0611 berbasis Windows 10, exploit asli dari https://github.comrapid7metasploit-frameworkblobmastermodulesexploitswindowsbrowseradobe_flashplayer_flash10o.rb
 
@@ -53,19 +56,23 @@ Versi Modifikasi dari exploit CVE-2011-0611 berbasis Windows 10, exploit asli da
 
 Kerentanan ini dalam komponen Java Runtime Environment (JRE) di Oracle Java SE 7 pembaruan 4 dan sebelumnya, 6 pembaruan 32 dan sebelumnya, 5 pembaruan 35 dan sebelumnya, dan 1.4.2_37 dan sebelumnya memungkinkan penyerang jarak jauh memengaruhi kerahasiaan, integritas, dan ketersediaan melalui vektor yang tidak diketahui terkait dengan Hotspot. jika Anda ingin tahu lebih banyak tentang CVE-2012-1723: https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Exploit:Java/CVE-2012-1723!generic&threatId=-2147302241
 
-![Screenshot from 2024-05-04 18-10-19](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/63ff31a9-6a4e-4a8b-ae52-4b216a539b59)
+![5](https://github.com/user-attachments/assets/04290e3f-6268-480a-9649-d73c3fd30c1c)
+
 
 `gunakan exploit/multi/browser/java_verifier_field_access`
 
 Penyerang secara aktif membahayakan situs web yang sah untuk serangan watering hole. Situs web yang diretas ini kemudian mengarahkan korban ke file JAR atau HTML berbahaya yang dihosting di situs lain yang dikelola oleh kelompok tersebut (memanfaatkan CVE-2013-2465, CVE-2013-1347, dan CVE-2012-1723 di Java 6, Java 7, IE 7, dan IE 8). Situs web yang diretas ini akan menggunakan backend PHP C2 Server yang sederhana. 
-![Screenshot from 2024-05-05 13-24-47](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/8502eba2-ab15-4b18-8c49-a0517276d6a4)
+
+![6](https://github.com/user-attachments/assets/848e8f5d-fa3f-45c5-84dc-c2ece3154069)
+
 
 
 ## Tahap ketiga (Paket Data XML XDP dengan eksploitasi SWF)
 
 Eksploitasi dikirimkan sebagai file XDP (Paket Data XML) yang sebenarnya merupakan file PDF yang dikemas dalam kontainer XML. Ini adalah metode pengaburan PDF yang dikenal dan berfungsi sebagai lapisan antideteksi tambahan. jika Anda ingin tahu lebih banyak tentang berkas XDP: https://filext.com/file-extension/XDP
 
-![Screenshot from 2024-05-07 10-26-24](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/a05844ed-bad1-4d9a-aaf6-808249f09a86)
+![7](https://github.com/user-attachments/assets/50fa5ad7-de31-43b4-b533-777c1a2ef62e)
+
 
 Berkas XDP berisi eksploitasi SWF (CVE-2011-0611) dan dua berkas (dienkripsi dengan XOR) yang disimpan dalam berkas PDF. Berkas ini juga mencakup fungsionalitas untuk mengunduh berkas tambahan melalui HTML-Smuggling oleh host apache.
 
@@ -73,7 +80,8 @@ Berkas XDP berisi eksploitasi SWF (CVE-2011-0611) dan dua berkas (dienkripsi den
 
 File penyelundupan HTML digunakan setelah diunggah ke server apache untuk mengunduh file lainnya. Salah satu file adalah payload DLL, yang lainnya adalah file JAR kecil yang digunakan untuk menyalin dan menjalankan DLL. Baris perintah untuk membuat payload base64 kemudian memasukkannya ke dalam file penyelundupan HTML: `base64 payload.dll -w 0` dan perintah yang sama tetapi dengan file jar.
 
-![Screenshot from 2024-05-07 16-04-06](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/bf4b3892-3521-41f9-aa5e-740c5229e204)
+![8](https://github.com/user-attachments/assets/0e738bc1-5ba0-46e1-9642-393fa269a84d)
+
 
 ## Tahap kelima (Salin DLL dengan file JAR)
 
@@ -82,7 +90,8 @@ File jar ini digunakan untuk menyalin dan menjalankan DLL dengan menjalankan per
 
 File ini membuat perintah untuk menyalin file bernama payload.dll ke direktori %TEMP% (biasanya direktori sementara) sebagai payload.dll lalu menjalankannya menggunakan rundll32.exe dan menunggu proses selesai menggunakan process.waitFor().
 
-![Screenshot from 2024-05-04 09-44-48](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/4ade01c3-7539-45da-941e-1d8425b68320)
+![9](https://github.com/user-attachments/assets/5254e357-37af-4161-b03e-6fccea4a7056)
+
 
 ## Muatan DLL tahap keenam (trojan Havex)
 
@@ -97,7 +106,8 @@ dan menulis data ini ke berkas %TEMP%\<tmp>.xmd (nama berkas dihasilkan oleh fun
 
 Pengungkapan Lengkap tentang Trojan Havex: https://www.netresec.com/?page=Blog&month=2014-10&post=Full-Disclosure-of-Havex-Trojans
 
-![Screenshot from 2024-05-05 07-59-00](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/9212b904-78cd-40af-a29d-61bd41970c3e)
+![10](https://github.com/user-attachments/assets/66ce4920-8d90-4a45-bf79-0bb1090b04c0)
+
 
 Jika Anda ingin tahu lebih banyak tentang trojan Havex: https://malpedia.caad.fkie.fraunhofer.de/details/win.havex_rat
 
@@ -105,7 +115,8 @@ Catatan tentang trojan havex: http://pastebin.com/qCdMwtZ6
 
 Dalam simulasi ini saya menggunakan payload sederhana dengan enkripsi XOR untuk mengamankan koneksi antara Server C2 dan Mesin Target, muatan ini menggunakan Winsock untuk membuat koneksi TCP antara mesin target dan mesin penyerang, dalam loop tak terbatas muatan menerima perintah dari penyerang, c2 mendekripsi perintah tersebut menggunakan enkripsi (XOR), mengeksekusi perintah tersebut menggunakan sistem, lalu tidur selama 10 detik sebelum mengulang loop.
 
-![Screenshot from 2024-05-08 16-33-22](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/5ac1dcf5-e68a-43a6-985b-51dce1ea74aa)
+![11](https://github.com/user-attachments/assets/c3c3ef4f-fc73-4629-acde-89f40727f1fa)
+
 
 Formulir forensik jaringan (peretas SCADA) tentang trojan havex: https://scadahacker.com/library/Documents/Cyber_Events/NETRESEC%20-%20SCADA%20Network%20Forensics.pdf
 
@@ -113,7 +124,8 @@ Formulir forensik jaringan (peretas SCADA) tentang trojan havex: https://scadaha
 
 Setelah melakukan kompilasi untuk payload dan file jar serta membuat base64 untuk file jar dan payload DLL, saya menaruhnya di file html smuggling, lalu saya membuat host untuk file html, lalu saya letakkan host ini di berkas XDP di samping CVE-2011-0611, lalu saya buat enkripsi XOR untuk berkas XDP, setelah ini ubah xdp ke pdf.
 
-![Screenshot from 2024-05-08 17-41-26](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/d16dad38-99a8-4ff5-820a-235437bb74a6)
+![12](https://github.com/user-attachments/assets/07ad46df-4469-44f7-abd6-54e2e6358a69)
+
 
 saya menggunakan browserling untuk membuat enkripsi XOR: https://www.browserling.com/tools/xor-encrypt
 
@@ -121,7 +133,8 @@ saya menggunakan browserling untuk membuat enkripsi XOR: https://www.browserling
 
 Skrip server PHP C2 ini memungkinkan untuk membuat komunikasi jarak jauh dengan memanfaatkan enkripsi XOR untuk transmisi data yang aman antara server penyerang dan target.
 
-![Screenshot from 2024-05-03 13-21-06](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/17237410-7464-4503-a97e-cea00a20e97b)
+![13](https://github.com/user-attachments/assets/136e7e6d-1039-44a7-a6ef-02d701665fcb)
+
 
 `xor_encrypt($data, $key)` Fungsi ini mengambil dua parameter: data yang akan dienkripsi ($data) dan kunci enkripsi ($key). Fungsi ini mengiterasi setiap karakter dalam data dan melakukan operasi XOR antara karakter dan karakter terkait dalam kunci (menggunakan modulo untuk mengulang kunci jika lebih pendek dari data), hasilnya dirangkai untuk membentuk output terenkripsi yang dikembalikan.
 
@@ -131,7 +144,8 @@ Skrip server PHP C2 ini memungkinkan untuk membuat komunikasi jarak jauh dengan 
 
 Jika Anda memilih (perintah atau URL), data dienkripsi menggunakan enkripsi XOR dengan kunci yang ditentukan pengguna sebelum dikirim ke target.
 
-![Screenshot from 2024-05-08 18-28-21](https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/d3c50bdb-5b59-4a46-b4ac-8acdeebff440)
+![14](https://github.com/user-attachments/assets/09998b7c-400f-451a-8da6-877c3b87af48)
+
 
 Simulasi lain untuk serangan yang sama oleh cobaltstrike: https://www.youtube.com/watch?v=XkBvo6z0Tqo
 
@@ -147,4 +161,8 @@ Simulasi lain untuk serangan yang sama oleh cobaltstrike: https://www.youtube.co
 
 CATATAN: Jika Anda memilih untuk mengambil perintah dari URL, Anda akan diminta untuk memasukkan URL. Jika Anda memilih untuk memasukkan perintah secara langsung, Anda akan diminta untuk memasukkan perintah yang akan dijalankan
 
-https://github.com/S3N4T0R-0X0/EnergeticBear-APT/assets/121706460/27186732-723b-4b6c-b233-0da479ea5b7a
+
+
+https://github.com/user-attachments/assets/e9b41d14-c7b8-45f0-97a7-9af2a2649f0a
+
+
