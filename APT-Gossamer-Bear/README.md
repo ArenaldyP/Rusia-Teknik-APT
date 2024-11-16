@@ -1,106 +1,98 @@
-# Gossamer Bear APT Adversary Simulation
+# Simulasi Serangan APT Gossamer Bear
 
-This is a simulation of attack by (Gossamer Bear) APT group targeting Institutions logistics support and defense to Ukraine the attack campaign was active from April 2023,
-The attack chain starts with send message with either an attached PDF file or a link to a PDF file hosted on a cloud storage platform. The PDF file will be unreadable, with a prominent button purporting to enable reading the content, Pressing the button in a PDF lure causes the default browser to open a link embedded in the PDF file code this is the beginning of the redirection chain. Targets will likely see a web page titled “Docs” in the initial page opened and may be presented with a CAPTCHA to solve before continuing the redirection. The browsing session will end showing a sign-in screen to the account where the spear-phishing email was received, with the targeted email already appearing in the username field. I relied on microsoft tofigure out the details to make this simulation: https://www.microsoft.com/en-us/security/blog/2023/12/07/star-blizzard-increases-sophistication-and-evasion-in-ongoing-attacks/
+Ini adalah simulasi serangan oleh grup APT (Gossamer Bear) yang menargetkan institusi logistik dan dukungan pertahanan untuk Ukraina. Kampanye serangan ini aktif sejak April 2023. Rantai serangan dimulai dengan mengirimkan pesan dengan lampiran file PDF atau tautan ke file PDF yang dihosting di platform penyimpanan cloud. File PDF tersebut tidak dapat dibaca, dengan tombol mencolok yang mengklaim dapat mengaktifkan konten. Menekan tombol dalam file PDF akan membuka tautan yang tertanam di kode file PDF menggunakan browser default. Ini adalah awal dari rantai pengalihan. Target kemungkinan akan melihat halaman berjudul “Docs” di halaman awal yang terbuka dan mungkin diminta untuk menyelesaikan CAPTCHA sebelum melanjutkan. Sesi penjelajahan akan berakhir dengan menampilkan layar masuk ke akun di mana email phishing diterima, dengan email target sudah terisi di bidang nama pengguna. Saya mengandalkan Microsoft untuk mendapatkan detail dalam membuat simulasi ini:  
+[Microsoft Blog](https://www.microsoft.com/en-us/security/blog/2023/12/07/star-blizzard-increases-sophistication-and-evasion-in-ongoing-attacks/)
 
-
-![imageedit_2_4168611963](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/0580f5fb-b020-4ca9-be84-af4c313a24f6)
-
-This attack included several stages including creating a PDF file and placing a hyperlink inside it. The PDF file will be unreadable, with a prominent button intended to enable reading the content, Pressing the button in the PDF file causes the default browser to open a link to a fake page that steals the target's Credential, From the same PDF I also made it possible for me to get Command and Control.
-
-1. PDF file: created PDF file includes a Hyperlink that leads to a fake page that steals Credential.
-
-2. HTML Smuggling: it was used to open the URL of the credentials phishing page and also to install the payload.
-
-3. Now when you click the prominent button in the PDF file it launches the html smuggling file on the apache server which contains payload in base64 encod and the phishing link.
-
-4. Data exfiltration: over GoogleDrive API C2 Channe, This integrates GoogleDrive API functionality to facilitate communication between the compromised system and the attacker-controlled server thereby potentially hiding the traffic within legitimate GoogleDrive communication.
-
-5. Make simple reverse shell payload to creates a TCP connection to a command and control (C2) server and listens for commands to execute on the target machine.
-
-6. The final step in this process involves the execution of the final payload, After it was downloaded through an obfuscated HTML file with base64 encoding and a phishing link was opened.
-
-![Figure-7 -Examples-of-Star-Blizzard-PDF-lures-when-opened-1536x509](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/e6161bf6-16e5-4865-a4b5-bba916150e6f)
+![1](https://github.com/user-attachments/assets/66b1c71d-f1a3-43cd-bbba-9b38386f873e)
 
 
-## The first stage (delivery technique)
+Serangan ini melibatkan beberapa tahap, termasuk membuat file PDF dengan tautan hiper di dalamnya. File PDF tersebut tidak dapat dibaca dan memiliki tombol mencolok yang dimaksudkan untuk mengaktifkan konten. Menekan tombol dalam file PDF akan membuka tautan ke halaman palsu yang mencuri kredensial target. Selain itu, dari file PDF ini, saya juga membuat mekanisme untuk mendapatkan Command and Control (C2).
 
-First the attackers created PDF file includes a Hyperlink that leads to a fake page that steals Credential, The advantage of the hyperlink is that it does not appear in texts, and this is exactly what the attackers wanted to exploit.
+## Tahap Serangan
 
-![Screenshot from 2024-05-29 16-19-48](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/3b29fad1-16ef-4d46-862e-7bd6b825db3e)
+1. **File PDF**: File PDF yang dibuat menyertakan tautan hiper yang mengarah ke halaman palsu yang mencuri kredensial.
+
+2. **HTML Smuggling**: Teknik ini digunakan untuk membuka URL halaman phishing kredensial dan juga menginstal payload.
+
+3. **Tombol PDF**: Ketika tombol mencolok dalam file PDF diklik, ini meluncurkan file HTML smuggling di server Apache yang berisi payload dalam base64 dan tautan phishing.
+
+4. **Eksfiltrasi Data**: Melalui saluran C2 API Google Drive. Ini mengintegrasikan fungsionalitas API Google Drive untuk memfasilitasi komunikasi antara sistem yang terinfeksi dan server yang dikendalikan penyerang, sehingga menyembunyikan lalu lintas dalam komunikasi Google Drive yang sah.
+
+5. **Payload Reverse Shell**: Membuat koneksi TCP ke server C2 dan mendengarkan perintah untuk dijalankan di mesin target.
+
+6. **Eksekusi Akhir**: Payload terakhir diunduh melalui file HTML yang dikaburkan dengan encoding base64, dan tautan phishing dibuka.
+
+![2](https://github.com/user-attachments/assets/630f06bd-0257-4ce6-b3e9-3417055eb481)
 
 
-HTML Smuggling it was used to open the URL of the credentials phishing page and also to create an install for payload to get Command and Control,
-After that i will place the HTML file in the apache server, take the localhost  and place it as a hyperlink in the prominent button in the PDF file.
+### Tahap Pertama: Teknik Pengiriman
+
+Penyerang membuat file PDF yang menyertakan tautan hiper yang mengarah ke halaman palsu untuk mencuri kredensial. Keuntungan dari tautan hiper ini adalah tidak terlihat dalam teks, yang dieksploitasi oleh penyerang.
+
+![3](https://github.com/user-attachments/assets/458a6352-3377-488c-9a6f-cd14d49842e3)
 
 
-![Screenshot from 2024-05-29 18-54-38](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/6cbb6df5-7444-4546-9eb8-282570d9ec3c)
+**HTML Smuggling** digunakan untuk membuka URL halaman phishing kredensial dan juga menginstal payload untuk mendapatkan kontrol C2. Setelah itu, saya menempatkan file HTML di server Apache, mengambil localhost, dan menggunakannya sebagai tautan hiper pada tombol mencolok dalam file PDF.
+
+![4](https://github.com/user-attachments/assets/72984ec7-47d6-4e5c-b7a5-b021060c545f)
 
 
-## The second stage (implanting technique)
+### Tahap Kedua: Teknik Penyisipan
 
-Now i will place the phishing link inside the HTML file in addition to the payload through base64 inside the HTML file, In this simulation i used the PyPhisher tool.
+Saya menempatkan tautan phishing di dalam file HTML, selain payload yang dienkode dalam base64. Dalam simulasi ini, saya menggunakan alat PyPhisher.
 
-PyPhisher: https://github.com/KasRoudra2/PyPhisher.git
+PyPhisher: [https://github.com/KasRoudra2/PyPhisher.git](https://github.com/KasRoudra2/PyPhisher.git)
 
 `base64 payload.exe`
 
-
-![Screenshot from 2024-05-29 19-28-02](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/5a1aa546-0990-4521-866c-1d9ac8862309)
-
-
-After that i will obfuscate the html file after putting the phishing link and the payload inside it before putting it in the apache server
-
-I used wmtips to make obfuscation for the html file : https://www.wmtips.com/tools/html-obfuscator/#google_vignette
-
-![Screenshot from 2024-05-29 19-41-51](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/c835211b-d03c-4c14-a261-01af7612f12c)
+![5](https://github.com/user-attachments/assets/97e128f2-e5e9-49a7-a83b-60c049e88d71)
 
 
-## The third stage (execution technique)
-Now when i click the prominent button in the PDF file it launches the html smuggling file on the apache server which contains payload in base64 encod and the phishing link.
+Setelah itu, saya mengaburkan file HTML setelah menambahkan tautan phishing dan payload ke dalamnya sebelum menempatkannya di server Apache.
 
-![Screenshot from 2024-06-04 17-00-45](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/ebeb9321-e025-4921-920f-590d24ddce98)
+Saya menggunakan alat WMTips untuk mengaburkan file HTML: [HTML Obfuscator](https://www.wmtips.com/tools/html-obfuscator/#google_vignette)
 
-## The fourth stage (Data Exfiltration) over GoogleDrive API C2 Channe
-
-In the actual attack, the attackers did not use an actual c2 server or payload and limited themselves to spear phishing, but here I wanted to exploit the presence of a larger HTML file to download the payload and open malicious url.
-
-First i need to create a google Drive account, as shown in the following figure
-
-1. Log into the Google Cloud Platform
-2. Create a project in Google Cloud Platform dashboard
-3. Enable Google Drive API
-4. Create a Google Drive API key
-
-![google-data-api-copy-key-600x386](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/b90e328c-5184-4072-adcb-6a6d7fb2debd)
-
-I used the GoogleDrive C2 (Command and Control) API as a means to establish a communication channel between the payload and the attacker's server, By using GoogleDrive as a C2 server, i can hide the malicious activities among the legitimate traffic to GoogleDrive, making it harder for security teams to detect the threat.
+![6](https://github.com/user-attachments/assets/afd638ec-d1dc-48bf-b72c-e7a70719d678)
 
 
-![photo_2024-06-05_08-57-19](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/17205a4c-4150-4b1f-85de-5463d333952b)
+### Tahap Ketiga: Teknik Eksekusi
 
-## The fifth stage (payload with reverse shell)
+Ketika tombol mencolok dalam file PDF diklik, file HTML smuggling di server Apache akan dijalankan, yang berisi payload dalam base64 dan tautan phishing.
 
-This payload is a simple reverse shell written in Rust it creates a TCP connection to a command and control (C2) server and listens for commands to execute on the infected machine, the payload first sets up the IP address and port number of the C2 server. 
-
-When a command is received, it is executed using the cmd command in Windows. The output of the command is captured and sent back to the C2 server, the loop continues until the connection is closed by the C2 server or an error occurs while receiving data from the server.
-
-![Screenshot from 2024-06-05 17-44-02](https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/76d00609-de5b-41b9-b3b8-421b4f48d6c2)
+![7](https://github.com/user-attachments/assets/4962e5ce-af04-4009-a7d7-56e37a8457b3)
 
 
-## Final result: payload connect to GoogleDrive C2 server
+### Tahap Keempat: Eksfiltrasi Data melalui Saluran C2 API Google Drive
 
-The final step in this process involves the execution of the final payload, After it was downloaded through an obfuscated HTML file with base64 encoding and a phishing link was opened.
+Dalam serangan sebenarnya, penyerang tidak menggunakan server C2 nyata atau payload, melainkan hanya menggunakan spear phishing. Namun, di sini saya memanfaatkan file HTML yang lebih besar untuk mengunduh payload dan membuka URL berbahaya.
 
+Langkah-langkah:
+1. Masuk ke Google Cloud Platform.
+2. Buat proyek di dasbor Google Cloud Platform.
+3. Aktifkan Google Drive API.
+4. Buat kunci API Google Drive.
+
+![8](https://github.com/user-attachments/assets/b6608e44-127f-4cd7-9785-d22248eb9d3b)
+
+
+Dengan menggunakan API Google Drive sebagai server C2, saya dapat menyembunyikan aktivitas berbahaya di antara lalu lintas yang sah ke Google Drive, membuat ancaman ini sulit terdeteksi oleh tim keamanan.
+
+![9](https://github.com/user-attachments/assets/f0c54df4-c139-428f-ac3b-a775163dc10c)
+
+
+### Tahap Kelima: Payload dengan Reverse Shell
+
+Payload ini adalah reverse shell sederhana yang ditulis dalam Rust, yang membuat koneksi TCP ke server C2 dan mendengarkan perintah untuk dieksekusi pada mesin yang terinfeksi. Payload akan terus berjalan hingga koneksi ditutup oleh server C2 atau terjadi kesalahan.
+
+![10](https://github.com/user-attachments/assets/78c3c5ed-f7ba-4b91-8279-43b88e1ae0b3)
+
+
+### Hasil Akhir: Payload Terhubung ke Server C2 Google Drive
+
+Langkah terakhir dalam proses ini melibatkan eksekusi payload akhir, yang diunduh melalui file HTML yang telah dikaburkan dengan encoding base64 dan tautan phishing dibuka.
 
 
 
-
-https://github.com/S3N4T0R-0X0/Gossamer-Bear-APT/assets/121706460/a4c96a49-7ab6-4665-ad4d-2b80faf646ec
-
-
-
-
-
+https://github.com/user-attachments/assets/5af6eef0-74e9-4356-afa5-0f832aa13e18
 
 
