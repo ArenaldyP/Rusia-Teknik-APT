@@ -14,7 +14,7 @@ Berikut adalah semua nama kelompok APT, dan saya telah mensimulasikan satu seran
 2. Fancy Bear APT28  ✅️
 3. Energetic Bear    ✅️
 4. Berserk Bear      ✅️
-5. Gossamer Bear     
+5. Gossamer Bear     ✅️
 6. Voodoo Bear APT44 
 7. Ember Bear        
 8. Venomous Bear     
