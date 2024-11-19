@@ -1,96 +1,88 @@
-# Voodoo Bear APT44 Adversary Simulation
+# Simulasi Serangan Voodoo Bear APT44
 
-This is a simulation of attack by (Voodoo Bear) APT44 group targeting entities in Eastern Europe the attack campaign was active as early as mid-2022,
-The attack chain starts with backdoor which is a DLL targets both 32-bit and 64-bit Windows environments, It gathers information and fingerprints the user and the machine then sends the information to the attackers-controlled C2, The backdoor uses a multi-threaded approach, and leverages event objects for data synchronization and signaling across threads. I relied on withsecure tofigure out the details to make this simulation: https://labs.withsecure.com/publications/kapeka
+Ini adalah simulasi serangan oleh kelompok APT44 (Voodoo Bear) yang menargetkan entitas di Eropa Timur. Kampanye serangan ini aktif sejak pertengahan tahun 2022.  
+Rantai serangan dimulai dengan backdoor berupa DLL yang menargetkan lingkungan Windows 32-bit dan 64-bit. Backdoor ini mengumpulkan informasi, membuat sidik jari pengguna dan mesin, lalu mengirimkan informasi tersebut ke server Command and Control (C2) yang dikendalikan penyerang. Backdoor ini menggunakan pendekatan multi-threaded dan memanfaatkan event object untuk sinkronisasi data dan sinyal antar thread.  
+Saya mengacu pada laporan dari WithSecure untuk mendapatkan detail yang dibutuhkan dalam pembuatan simulasi ini: [Laporan WithSecure tentang Kapeka](https://labs.withsecure.com/publications/kapeka).
 
 ![imageedit_2_8201736021](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/d8af69c6-b3f6-4870-a8d9-6dcf222c7564)
 
+Kapeka, yang berarti "bangau kecil" dalam bahasa Rusia, adalah backdoor fleksibel yang ditulis dalam C++. Backdoor ini memungkinkan aktor ancaman untuk menggunakannya sebagai toolkit tahap awal, sekaligus memberikan persistensi jangka panjang di jaringan korban.  
+Dropper Kapeka adalah executable Windows 32-bit yang digunakan untuk menanam dan menjalankan backdoor di mesin korban. Dropper ini juga mengatur persistensi dengan membuat *scheduled task* atau entri registry autorun. Akhirnya, dropper menghapus dirinya sendiri dari sistem.  
+Informasi lebih lanjut tentang backdoor Kapeka untuk kelompok APT Voodoo Bear dapat ditemukan di sini: [Kapeka Backdoor - PolySwarm Blog](https://blog.polyswarm.io/voodoo-bears-kapeka-backdoor-targets-critical-infrastructure).
 
-Kapeka, which means “little stork” in Russian,  is a flexible backdoor written in C++. It allows the threat actors to use it as an early stage toolkit, while also providing long term persistence to the victim network. Kapeka’s dropper is a 32-bit Windows executable that drops and launches the backdoor on a victim machine. The dropper also sets up persistence by creating a scheduled task or autorun registry. Finally, the dropper removes itself from the system. 
-If you need to know more about Kapeka backdoor for Voodoo Bear APT group: https://blog.polyswarm.io/voodoo-bears-kapeka-backdoor-targets-critical-infrastructure
+---
 
+## Tahap Pertama: RSA C2-Server
 
-1. RSA C2-Server: I developed  C2 server script enable to make remote communication by utilizes RSA encryption for secure data transmission between the attacker server and the target.
+Script server C2 berbasis PHP ini memungkinkan komunikasi jarak jauh dengan menggunakan enkripsi RSA untuk transmisi data yang aman antara server penyerang dan target.
 
-2. Testing payload : I used payload written by Python only to test C2 (testing payload.py), if there were any problems with the connection (just for test connection) before writing the actual payload.
+![Screenshot dari 2024-06-13 22-11-36](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/acddd6d1-60cf-4ea9-a259-e844f2ac02a6)
 
-3. DLL backdoor: I have developed a simulation of the kapeka backdoor that the attackers used in the actual attack.
+**`rsa_encrypt($data, $public_key):`**  
+- **Tujuan**: Mengenkripsi data menggunakan kunci publik RSA.  
+- **Proses**: Fungsi ini menerima data dan kunci publik sebagai input, lalu menggunakan `openssl_public_encrypt` untuk mengenkripsi data dengan kunci publik yang diberikan.  
+- **Output**: Mengembalikan data yang telah dienkripsi.  
 
+**`rsa_decrypt($data, $private_key):`**  
+- **Tujuan**: Mendekripsi data menggunakan kunci privat RSA.  
+- **Proses**: Fungsi ini menerima data terenkripsi dan kunci privat sebagai input, lalu menggunakan `openssl_private_decrypt` untuk mendekripsi data dengan kunci privat yang diberikan.  
+- **Output**: Mengembalikan data yang telah didekripsi.  
 
-![Screenshot from 2024-06-11 21-44-39](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/a0168811-c96f-4b90-af05-77a4a97ce621)
+![Screenshot dari 2024-06-13 22-17-12](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/d0701451-ff05-4db8-95fe-e584d688f5b8)
 
+---
 
+## Tahap Kedua: Pengujian Payload
 
-## The first stage (RSA C2-Server)
+Saya menggunakan payload sederhana yang ditulis dalam Python untuk menguji koneksi C2 (file: `testing_payload.py`). Tujuannya adalah memastikan tidak ada masalah dalam koneksi sebelum menulis payload sebenarnya.
 
-This PHP C2 server script enable to make remote communication by utilizes RSA encryption for secure data transmission between the attacker server and the target.
+![Screenshot dari 2024-06-14 17-52-30](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/a87fcabf-f491-4b78-b5b3-300d779cafdd)
 
-![Screenshot from 2024-06-13 22-11-36](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/acddd6d1-60cf-4ea9-a259-e844f2ac02a6)
+- **RSA dan PKCS1_OAEP dari pycryptodome**: Digunakan untuk enkripsi dan dekripsi dengan RSA.  
+- **`rsa_encrypt(data, public_key):`** Mengenkripsi data menggunakan kunci publik yang diberikan.  
+- **`rsa_decrypt(data, private_key):`** Mendekripsi data menggunakan kunci privat (tidak digunakan dalam script ini).  
 
+![Screenshot dari 2024-06-14 17-45-29](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/e947a9df-4a03-4e3b-b4a6-d186ee2c0e04)
 
-`rsa_encrypt($data, $public_key):`
-
-Purpose: Encrypts data using the RSA public key.
-Process: The function takes the data and the public key as input, then uses openssl_public_encrypt to encrypt the data with the provided public key.
-Output: Returns the encrypted data.
-
-`rsa_decrypt($data, $private_key):`
-
-Purpose: Decrypts data using the RSA private key.
-Process: The function takes the encrypted data and the private key as input, then uses openssl_private_decrypt to decrypt the data with the provided private key.
-Output: Returns the decrypted data.
-
-![Screenshot from 2024-06-13 22-17-12](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/d0701451-ff05-4db8-95fe-e584d688f5b8)
-
-
-
-## The Second stage (Testing payload)
-
-I used payload written by Python only to test C2 (testing payload.py), if there were any problems with the connection (just for test connection) before writing the actual payload.
-
-![Screenshot from 2024-06-14 17-52-30](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/a87fcabf-f491-4b78-b5b3-300d779cafdd)
-
-
-
-RSA and PKCS1_OAEP from pycryptodome: For encryption and decryption using RSA.
-
-rsa_encrypt(data, public_key): Encrypts data using the provided public key.
-
-rsa_decrypt(data, private_key): Decrypts data using the provided private key (not used in this script).
-
-
-![Screenshot from 2024-06-14 17-45-29](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/e947a9df-4a03-4e3b-b4a6-d186ee2c0e04)
-
-
-Note: Ensure that the server is correctly sending RSA-encrypted commands and handling the responses appropriately. The script requires the pycryptodome library for RSA encryption and decryption:
+**Catatan**: Pastikan server mengirimkan perintah terenkripsi RSA dan menangani respons dengan benar. Script ini membutuhkan pustaka `pycryptodome` untuk enkripsi dan dekripsi RSA:  
 
     pip install pycryptodome
 
-## The third stage (kapeka backdoor)
+---
 
-The Kapeka backdoor is a Windows DLL containing one function which has been exported by ordinal2 (rather than by name). The backdoor is written in C++ and compiled (linker
-14.16) using Visual Studio 2017 (15.9). The backdoor file masquerades as a Microsoft Word Add-In with its extension (.wll), but in reality it is a DLL file.
+## Tahap Ketiga: Kapeka Backdoor
 
-I have developed a simulation of the kapeka backdoor that the attackers used in the actual attack.
+Backdoor Kapeka adalah file DLL Windows yang memiliki satu fungsi yang diekspor melalui ordinal2 (bukan melalui nama). Backdoor ini ditulis dalam C++ dan dikompilasi menggunakan Visual Studio 2017 (linker 14.16).  
+File backdoor ini menyamar sebagai Add-In Microsoft Word dengan ekstensi `.wll`, tetapi sebenarnya merupakan file DLL.  
+
+Saya telah mengembangkan simulasi backdoor Kapeka yang digunakan oleh penyerang dalam serangan nyata.
+
+### Thread Utama dalam Backdoor:
+
+1. **Thread Pertama**  
+   - Merupakan thread utama yang melakukan inisialisasi dan rutinitas keluar.
+   - Melakukan polling ke C2 untuk menerima tugas atau konfigurasi C2 terbaru.  
+
+2. **Thread Kedua**  
+   - Memantau event log off pada Windows.  
+   - Memberikan sinyal ke thread utama untuk melakukan rutinitas keluar dengan baik saat pengguna log off.  
+
+![Screenshot dari 2024-06-13 17-19-15](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/aef17efa-64ab-4cd4-8e8c-ff21ec9b6ce5)
+
+3. **Thread Ketiga**  
+   - Memantau tugas yang masuk untuk diproses.  
+   - Thread ini meluncurkan thread tambahan untuk menjalankan setiap tugas yang diterima.  
+
+4. **Thread Keempat**  
+   - Memantau penyelesaian tugas.  
+   - Mengirim kembali hasil tugas yang telah diproses ke C2.  
+
+![Screenshot dari 2024-06-13 17-21-20](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/fa745546-7488-4f8b-a118-8c4866418b0c)
+
+### Kompilasi Manual:
+Untuk mengkompilasi backdoor, gunakan perintah berikut:  
+```bash
+x86_64-w64-mingw32-g++ -shared -o kapeka_backdoor.dll kapeka_backdoor.cpp -lws2_32
 
 
-
-In total, the backdoor launches four main threads:
-
-• First thread: This is the primary thread which performs the initialization and exit routine, as well as C2 polling to receive tasks or an updated C2 configuration.
-
-• Second thread: Monitors for Windows log off events, signaling the primary thread to perform the backdoor’s graceful exit routine upon log off.
-
-![Screenshot from 2024-06-13 17-19-15](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/aef17efa-64ab-4cd4-8e8c-ff21ec9b6ce5)
-
-
-• Third thread: Monitors for incoming tasks to be processed. This thread launches subsequent threads to execute each received task.
-
-• Fourth thread: Monitors for completion of tasks to send back the processed task results to the C2.
-
-![Screenshot from 2024-06-13 17-21-20](https://github.com/S3N4T0R-0X0/Voodoo-Bear-APT/assets/121706460/fa745546-7488-4f8b-a118-8c4866418b0c)
-
-
-manual compile:`x86_64-w64-mingw32-g++ -shared -o kapeka_backdoor.dll kapeka_backdoor.cpp -lws2_32`
-
-Run the DLL:`rundll32.exe kapeka_backdoor.dll,ExportedFunction -d`
+rundll32.exe kapeka_backdoor.dll,ExportedFunction -d
