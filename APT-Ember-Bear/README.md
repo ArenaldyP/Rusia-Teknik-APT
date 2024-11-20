@@ -4,7 +4,8 @@ Simulasi ini adalah serangan oleh grup APT (Ember Bear) yang menargetkan organis
 
 OutSteel adalah alat pencuri dokumen sederhana. Alat ini mencari dokumen yang berpotensi sensitif berdasarkan jenis file-nya dan mengunggah file tersebut ke server jarak jauh. Penggunaan OutSteel menunjukkan bahwa tujuan utama grup ini adalah pengumpulan data pada organisasi pemerintah dan perusahaan yang terlibat dalam infrastruktur penting. SaintBot adalah alat pengunduh yang memungkinkan pelaku ancaman mengunduh dan menjalankan alat tambahan di sistem yang terinfeksi. SaintBot memberikan akses persisten kepada pelaku ancaman ke sistem sambil memberikan kemampuan untuk memperluas operasi mereka. Saya mengandalkan informasi dari Palo Alto untuk membuat simulasi ini: https://unit42.paloaltonetworks.com/ukraine-targeted-outsteel-saintbot/
 
-![imageedit_2_8449936728](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/755eabf4-c79a-4910-bddf-9a0c945c5141)
+![1](https://github.com/user-attachments/assets/b18d0412-708b-4325-b0c3-bf615997c553)
+
 
 Serangan ini mencakup beberapa tahap, termasuk tautan ke arsip Zip yang berisi pintasan berbahaya (LNK) dalam email spear phishing, serta lampiran berupa dokumen PDF, dokumen Word, file JavaScript, dan file Eksekutabel Control Panel (CPL). Bahkan dokumen Word yang dilampirkan pada email menggunakan berbagai teknik, termasuk macro berbahaya, JavaScript yang disematkan, dan eksploitasi CVE-2017-11882 untuk menginstal payload ke dalam sistem. Dengan pengecualian file CPL, sebagian besar mekanisme pengiriman mengandalkan skrip PowerShell untuk mengunduh dan menjalankan kode dari server jarak jauh.
 
@@ -22,7 +23,8 @@ Serangan ini mencakup beberapa tahap, termasuk tautan ke arsip Zip yang berisi p
 
 Contoh beberapa file PDF dan dokumen Word yang digunakan dalam serangan ini:
 
-![imageedit_3_9227726456](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/4a8bf68d-d249-457b-b046-ebc8cfcf3b9b)
+![2](https://github.com/user-attachments/assets/d6268458-3b55-45f2-a2bc-bfd17101dc81)
+
 
 ## Tahap Pertama (teknik pengiriman)
 
@@ -30,7 +32,8 @@ Pada awalnya, saya akan membuat file Word yang akan saya gunakan untuk injeksi k
 
 April 2021: Email spear phishing bertema Bitcoin yang menargetkan organisasi pemerintah Ukraina.
 
-![Screenshot from 2024-06-26 07-39-00](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/b360e79a-194d-4ff1-89c9-5f4169a0b2e4)
+![3](https://github.com/user-attachments/assets/c8469a14-7366-4681-bdd3-635e6413ee9b)
+
 
 
 ## Tahap Kedua (eksploitasi Kerentanan Memori Microsoft Office CVE-2017-11882)
@@ -42,7 +45,8 @@ Repositori eksploitasi: https://github.com/0x09AL/CVE-2017-11882-metasploit?tab=
 Kerentanan ini memungkinkan pelaku ancaman menjalankan kode arbitrer dalam konteks pengguna saat ini. Saya kemudian menyertakan file Word dalam email phishing, termasuk tautan ke file Zip yang berisi pintasan berbahaya (LNK).
 
 
-![Screenshot from 2024-06-26 07-28-07](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/d1b43f2a-6816-44fb-ba5e-f407da4b0152)
+![4](https://github.com/user-attachments/assets/7ee006a3-4014-433f-a45a-a2f2db43743d)
+
 
 
 `sudo cp cve_2017_11882.rb /usr/share/metasploit-framework/modules/exploits/windows/fileformat`
@@ -56,7 +60,8 @@ Kerentanan ini memungkinkan pelaku ancaman menjalankan kode arbitrer dalam konte
 
 Penyerang menggunakan Discord API C2 (Command and Control) sebagai sarana untuk membangun saluran komunikasi antara payload mereka dan server yang dikendalikan oleh penyerang. Dengan menggunakan Discord sebagai server C2, penyerang dapat menyembunyikan aktivitas berbahaya mereka di antara lalu lintas sah ke Discord, sehingga lebih sulit bagi tim keamanan untuk mendeteksi ancaman tersebut.
 
-![Screenshot from 2024-06-25 14-43-39](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/bace255e-fb00-447a-81a9-91dea91f01df)
+![5](https://github.com/user-attachments/assets/5ad49337-5f7c-40a2-a21c-20fca2a114e7)
+
 
 Pertama, saya perlu membuat akun Discord dan mengaktifkan izinnya, seperti yang ditunjukkan dalam gambar berikut.
 
@@ -74,7 +79,8 @@ Pertama, saya perlu membuat akun Discord dan mengaktifkan izinnya, seperti yang 
 
 Skrip ini mengintegrasikan fungsionalitas Discord API untuk memfasilitasi komunikasi antara sistem yang dikompromikan dan server yang dikendalikan oleh penyerang, sehingga berpotensi menyembunyikan lalu lintas dalam komunikasi Discord yang sah. Skrip ini juga memeriksa apakah token bot Discord dan ID channel disediakan. Jika ya, maka fungsionalitas bot Discord dimulai; jika tidak, skrip melanjutkan hanya dengan IP dan port. Dengan cara ini, skrip dapat melanjutkan koneksi tanpa detail Discord jika tidak dimasukkan.
 
-![photo_2024-07-02_11-38-29](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/6fb172b1-a864-470c-9535-d899dba65d5b)
+![9](https://github.com/user-attachments/assets/339a3da9-fa35-4a8f-ba38-54130ba21819)
+
 
 ## Tahap Keempat (SaintBot Payload Loader)
 
@@ -84,23 +90,27 @@ SaintBot adalah malware loader yang baru ditemukan, didokumentasikan pada April 
 
 2. Mengunduh Payload: Fungsi `DownloadPayload` mengunduh file dari URL tertentu dan menyimpannya ke path file tertentu.
 
-![Screenshot from 2024-07-04 15-36-33](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/75ddbafe-5642-42b0-8e46-17bdc923ebd9)
+![10](https://github.com/user-attachments/assets/a6e48cdf-9d0e-4005-a49c-08fbc6747d9e)
+
 
 3. Menyuntikkan ke Proses: Fungsi `InjectIntoProcess` menyuntikkan DLL ke dalam proses yang sedang berjalan berdasarkan namanya.
 
 4. Penghapusan Diri: Fungsi `SelfDelete` menghapus file executable setelah eksekusinya selesai.
 
-![Screenshot from 2024-07-04 15-34-57](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/4ecb437f-1fb8-4264-bb3d-3f4e931c1e34)
+![11](https://github.com/user-attachments/assets/016ac78a-5d1c-4b1a-aac6-0d7524372a88)
+
 
 ## Tahap Kelima (Menonaktifkan Windows Defender)
 
 File batch ini digunakan untuk menonaktifkan fungsi Windows Defender. Ini dilakukan dengan mengeksekusi beberapa perintah melalui CMD yang memodifikasi kunci registry dan menonaktifkan tugas terjadwal Windows Defender.
 
-![Screenshot from 2024-06-18 08-31-01](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/2d3ddff9-2068-432a-ad13-907844e5d376)
+![12](https://github.com/user-attachments/assets/4566b621-398b-47f3-9a6f-4930bdfd97a0)
+
 
 ## Tahap Keenam (OutSteel Stealer)
 
 OutSteel adalah pengunggah file dan pencuri dokumen yang dikembangkan dengan bahasa skrip AutoIT. Ini dijalankan bersama dengan biner lainnya. Alat ini mulai dengan memindai disk lokal untuk mencari file dengan ekstensi tertentu, sebelum mengunggah file tersebut ke server command and control (C2) yang telah dikodekan secara keras. Saya mensimulasikan Infostealer ini melalui Skrip PowerShell.
 
-![Screenshot from 2024-07-04 15-37-31](https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/85849f48-7608-4db2-b6c1-c8b924e36d39)
+![13](https://github.com/user-attachments/assets/19584a97-25f5-4da9-9785-b48be1fe41ff)
+
 
