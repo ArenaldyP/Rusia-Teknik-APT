@@ -67,15 +67,15 @@ Pertama, saya perlu membuat akun Discord dan mengaktifkan izinnya, seperti yang 
 
 1. Buat Aplikasi Discord.
 
-<img width="1679" alt="image-20231221113019757" src="https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/2ac6a61e-719d-49eb-a610-f75808dd5e1a">
+<img width="1679" alt="image-20231221113019757" src="https://github.com/ArenaldyP/Rusia-Teknik-APT/blob/main/APT-Ember-Bear/Images/6.png?raw=true">
 
 2. Konfigurasikan Aplikasi Discord.
 
-<img width="1679" alt="image-20231221113340790" src="https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/f88c0cc8-1abd-462e-bdff-0adadc85914a">
+<img width="1679" alt="image-20231221113340790" src="https://github.com/ArenaldyP/Rusia-Teknik-APT/blob/main/APT-Ember-Bear/Images/7.png?raw=true">
 
 3. Pergi ke "Bot", temukan "Privileged Gateway Intents", aktifkan semua tiga "Intents", dan simpan.
 
-<img width="1679" alt="image-20231221113617087" src="https://github.com/S3N4T0R-0X0/Ember-Bear-APT/assets/121706460/cbb3858f-f51c-454f-8458-6478a56b92c6">
+<img width="1679" alt="image-20231221113617087" src="https://github.com/ArenaldyP/Rusia-Teknik-APT/blob/main/APT-Ember-Bear/Images/8.png?raw=true">
 
 Skrip ini mengintegrasikan fungsionalitas Discord API untuk memfasilitasi komunikasi antara sistem yang dikompromikan dan server yang dikendalikan oleh penyerang, sehingga berpotensi menyembunyikan lalu lintas dalam komunikasi Discord yang sah. Skrip ini juga memeriksa apakah token bot Discord dan ID channel disediakan. Jika ya, maka fungsionalitas bot Discord dimulai; jika tidak, skrip melanjutkan hanya dengan IP dan port. Dengan cara ini, skrip dapat melanjutkan koneksi tanpa detail Discord jika tidak dimasukkan.
 
