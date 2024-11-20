@@ -16,7 +16,7 @@ Berikut adalah semua nama kelompok APT, dan saya telah mensimulasikan satu seran
 4. Berserk Bear      ✅️
 5. Gossamer Bear     ✅️
 6. Voodoo Bear APT44 ✅️
-7. Ember Bear        
+7. Ember Bear        ✅️ 
 8. Venomous Bear     
 9. Primitive Bear    
 
