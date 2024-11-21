@@ -2,7 +2,8 @@
 
 Ini adalah simulasi serangan oleh grup APT (Venomous Bear) yang menargetkan Amerika Serikat, Jerman, dan Afghanistan. Kampanye serangan ini aktif setidaknya sejak tahun 2020. Rantai serangan dimulai dengan memasang backdoor sebagai layanan di mesin yang terinfeksi. Para penyerang mencoba beroperasi secara diam-diam dengan menamai layanan sebagai "Windows Time Service", menyerupai layanan Windows yang sudah ada. Backdoor ini dapat mengunggah dan mengeksekusi file atau mengekstrak file dari sistem yang terinfeksi. Backdoor ini berkomunikasi dengan server command and control (C2) melalui saluran terenkripsi HTTPS setiap lima detik untuk memeriksa apakah ada perintah baru dari operator. Saya mengandalkan informasi dari Cisco Talos Intelligence Group untuk menyusun simulasi ini: https://blog.talosintelligence.com/tinyturla/
 
-![imageedit_3_4790485345](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/1a56bebb-927d-4286-8257-aa907f240017)
+![1](https://github.com/user-attachments/assets/fe8ff6d4-036e-4dcf-8e40-6eff39075532)
+
 
 Para penyerang menggunakan file .BAT yang menyerupai Layanan Waktu Windows Microsoft untuk memasang backdoor. Backdoor ini berbentuk library link dinamis layanan (DLL) yang disebut w64time.dll. Deskripsi dan nama file membuatnya terlihat seperti DLL Microsoft yang valid. Setelah aktif dan berjalan, backdoor ini memungkinkan penyerang mengekstrak file atau mengunggah dan mengeksekusi file, sehingga berfungsi sebagai jalur masuk tahap kedua sesuai kebutuhan.
 
@@ -14,13 +15,15 @@ Para penyerang menggunakan file .BAT yang menyerupai Layanan Waktu Windows Micro
 
 Menurut tim Cisco, mereka tidak dapat mengidentifikasi metode yang digunakan untuk memasang backdoor ini di sistem korban.
 
-![Screenshot from 2024-06-09 16-11-23](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/3116c5e9-0476-4b93-a672-bc7436abfce0)
+![2](https://github.com/user-attachments/assets/5e0c54a5-6fd9-480c-b141-e58fe0d822cb)
+
 
 ## Tahap Pertama (File .BAT)
 
 Para penyerang menggunakan file .bat seperti yang ditunjukkan di bawah ini untuk memasang backdoor sebagai layanan Microsoft Windows Time palsu. File .bat ini juga mengatur parameter konfigurasi di registry yang digunakan backdoor.
 
-![Screenshot from 2024-06-07 19-39-16](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/381d1833-3f71-4278-aa56-60952e8d3f55)
+![3](https://github.com/user-attachments/assets/299eb417-a007-4dc5-a548-380ae5010ace)
+
 
 Saya menulis file .bat yang identik dengan yang digunakan para penyerang untuk memasang backdoor sebagai layanan Microsoft Windows Time palsu.
 
@@ -39,7 +42,8 @@ Perintah-perintah ini menambahkan berbagai parameter konfigurasi untuk layanan W
 - **TimeLong**: Pengaturan terkait waktu.
 - **TimeShort**: Pengaturan terkait waktu lainnya.
 
-![Screenshot from 2024-06-08 07-18-07](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/a1d9236a-12fc-4008-a9a1-0eedb818d0c9)
+![4](https://github.com/user-attachments/assets/42273091-44c8-43c4-b129-bf3d232f78d6)
+
 
 Ini berarti malware berjalan sebagai layanan yang tersembunyi dalam proses svchost.exe. Fungsi startup `ServiceMain` dari DLL ini tidak melakukan banyak hal selain menjalankan eksekusi.
 
@@ -50,7 +54,8 @@ Ini berarti malware berjalan sebagai layanan yang tersembunyi dalam proses svcho
 
 Pertama, backdoor membaca konfigurasi dari registry dan menyimpannya dalam struktur "result", yang kemudian dialokasikan ke struktur "sConfig".
 
-![Screenshot from 2024-06-08 22-30-51](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/b2164d44-bffd-4c9a-9ebe-574c28104eb0)
+![5](https://github.com/user-attachments/assets/b43cd542-9d76-4c0f-986a-d3dcd8e44da3)
+
 
 Backdoor ini mencakup komponen-komponen berikut:
 
@@ -68,7 +73,8 @@ Backdoor ini mencakup komponen-komponen berikut:
 
 Sesuaikan nilai placeholder dan tambahkan logika sebenarnya untuk operasi backdoor dan pemrosesan perintah C2 sesuai kebutuhan Anda.
 
-![Screenshot from 2024-06-08 22-34-36](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/1f3eb42d-b546-4d32-9166-851f0dd00fa6)
+![6](https://github.com/user-attachments/assets/f1631db5-6d5e-47b8-9919-9e512f808c0d)
+
 
 
 ## Tahap Ketiga (Pendengar Backdoor)
@@ -87,5 +93,6 @@ Di sini, saya mengembangkan skrip pendengar sederhana yang menunggu koneksi masu
 
 - **Mengakumulasi data** ke dalam variabel output.
 
-![Screenshot from 2024-06-09 10-44-07](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/41bfa80d-a18a-4bd3-ad6d-f243bd29bece)
+![7](https://github.com/user-attachments/assets/af9bab8d-4b96-46cc-ad1f-94e86a797d3d)
+
 
