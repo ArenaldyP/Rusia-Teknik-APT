@@ -17,7 +17,7 @@ Berikut adalah semua nama kelompok APT, dan saya telah mensimulasikan satu seran
 5. Gossamer Bear     ✅️
 6. Voodoo Bear APT44 ✅️
 7. Ember Bear        ✅️ 
-8. Venomous Bear     
+8. Venomous Bear     ✅️
 9. Primitive Bear    
 
 **Disclaimer:** Proyek ini hanya untuk penelitian, peningkatan kesadaran, dan tujuan pendidikan. Saya tidak bertanggung jawab jika ada yang menggunakan teknik ini untuk tujuan ilegal.
