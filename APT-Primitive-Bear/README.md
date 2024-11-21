@@ -1,89 +1,79 @@
-# Primitive Bear APT Adversary Simulation
+# Simulasi Serangan APT Primitive Bear
 
-This is a simulation of attack by (Primitive Bear) APT group targeting the State Migration Service of Ukraine the attack campaign was active from first of December to June 2021, The attack chain starts with Word document sent to the victim via email then VBS payload is used to obtain the command and control, before placing the payload or injecting it into the Word file an obfuscation of the payload is done to create an evasion of the detection then it is injected through the macro into the Word document, Then i create an SFX archive and put the payload Word file inside it to get command and control and use this SFX archive to perform a spear phishing attack then i get command and control by opening the Word file. I relied on palo alto networks to figure out the details to make this simulation: https://unit42.paloaltonetworks.com/gamaredon-primitive-bear-ukraine-update-2021/
-
+Ini adalah simulasi serangan oleh kelompok APT (Primitive Bear) yang menargetkan Layanan Migrasi Negara Ukraina. Kampanye serangan ini aktif dari bulan Desember hingga Juni 2021. Rantai serangan dimulai dengan dokumen Word yang dikirimkan ke korban melalui email, kemudian payload VBS digunakan untuk mendapatkan kendali dan komunikasi (Command and Control). Sebelum menempatkan payload atau menyuntikkannya ke dalam file Word, dilakukan obfuscation pada payload untuk menghindari deteksi, kemudian payload tersebut disuntikkan melalui macro ke dalam dokumen Word. Selanjutnya, saya membuat arsip SFX dan memasukkan file Word dengan payload di dalamnya untuk mendapatkan kendali dan komunikasi. Arsip SFX ini digunakan untuk melakukan serangan spear phishing, dan saya memperoleh kendali dengan membuka file Word. Saya mengandalkan Palo Alto Networks untuk mendapatkan detail serangan ini untuk membuat simulasi ini: [Palo Alto Networks Update](https://unit42.paloaltonetworks.com/gamaredon-primitive-bear-ukraine-update-2021/)
 
 ![imageedit_2_9352621513](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/a715b1e5-5d3f-48af-a749-7651cb857341)
 
-This attack included several stages including Create an SFX file with Word File inside it. This Word File contains VBS script which is responsible for command and control and make obfuscation VBS script payload before putting it inside the word file this sent through spear phishing attack and make remote communication by utilizes DES encryption for secure data transmission between the attacker server and the target.
+Serangan ini melibatkan beberapa tahap, termasuk membuat file SFX dengan file Word di dalamnya. File Word ini berisi skrip VBS yang bertanggung jawab untuk command and control dan membuat obfuscation pada skrip VBS payload sebelum menempatkannya ke dalam file Word. Payload ini dikirim melalui serangan spear phishing dan melakukan komunikasi jarak jauh dengan memanfaatkan enkripsi DES untuk transmisi data yang aman antara server penyerang dan target.
 
-1. Create the Word Document: Write a Word document (.doc or .docx) containing the macro with the obfuscated VBS payload. The macro should be designed to execute the payload when the document is opened. 
+1. **Membuat Dokumen Word**: Menulis dokumen Word (.doc atau .docx) yang berisi macro dengan payload VBS yang sudah di-obfuscate. Macro ini harus dirancang untuk mengeksekusi payload saat dokumen dibuka.
 
-2. Create a VBScript payload designed to establish a reverse connection to the Command and Control (C2) server.
+2. **Membuat Payload VBScript**: Membuat payload VBS yang dirancang untuk membangun koneksi balik (reverse connection) ke server Command and Control (C2).
 
-3. Obfuscate the VBS Payload: Obfuscate the VBS payload to make it more difficult to detect by antivirus software or security solutions.
+3. **Melakukan Obfuscation pada Payload VBS**: Melakukan obfuscation pada payload VBS agar lebih sulit dideteksi oleh perangkat lunak antivirus atau solusi keamanan lainnya.
 
-4. Create a Self-Extracting Archive with WinRAR: Use WinRAR to create a self-extracting (SFX) archive.
-Add the Word document containing the macro and the obfuscated VBS payload to the archive.
+4. **Membuat Arsip Self-Extracting dengan WinRAR**: Menggunakan WinRAR untuk membuat arsip self-extracting (SFX).
+Menambahkan dokumen Word yang berisi macro dan payload VBS yang di-obfuscate ke dalam arsip.
 
-5. Place the obfuscated VBS payload and word file inside the SFX archive to send to the target.
+5. **Menempatkan Payload VBS yang di-obfuscate dan file Word di dalam arsip SFX untuk dikirim ke target**.
 
-6. Final result make remote communication by utilizes DES encryption for secure data transmission between the attacker server and the target. 
-
+6. **Hasil Akhir**: Melakukan komunikasi jarak jauh dengan memanfaatkan enkripsi DES untuk transmisi data yang aman antara server penyerang dan target.
 
 ![word-image-4](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/9e4ac08a-9ae5-4b39-ad41-ed9d82cc65b6)
 
-## The first stage (delivery technique)
+## Tahap pertama (teknik pengiriman)
 
-I began by drafting the phishing email in a Word document for the upcoming attack. Subsequently, prior to crafting the payload, which will consist of a VBS Script injected into macros, I will encapsulate them within an SFX file. The assault targeted the Ukrainian Immigration Department, with the phishing correspondence purporting to offer financial assistance totaling 2 billion dollars.
+Saya mulai dengan menyusun email phishing dalam dokumen Word untuk serangan yang akan datang. Setelah itu, sebelum membuat payload, yang akan terdiri dari skrip VBS yang disuntikkan ke dalam macro, saya akan mengenkapsulasinya dalam file SFX. Serangan ini menargetkan Departemen Imigrasi Ukraina, dengan surat phishing yang mengklaim menawarkan bantuan keuangan sebesar 2 miliar dolar.
 
 ![Screenshot from 2024-05-25 16-59-59](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/44745418-6d38-4bcc-bc42-368227fe63c0)
 
-This word file will be used to place the VBS script payload into it after obfuscation here will help make detection more difficult when placing this VBS script inside the macro in word file.
+File Word ini akan digunakan untuk menempatkan payload skrip VBS setelah dilakukan obfuscation, yang di sini akan membantu membuat deteksi lebih sulit saat menempatkan skrip VBS ini ke dalam macro di file Word.
 
-## The Second stage (VBScript payload)
 
-First i will create a VBS payload which is a simple VBS script designed to establish a reverse connection to the C2 server then open a Word file enable macros and insert the payload into the macro finally i will save the document.
+## Tahap Kedua (Payload VBScript)
+
+Pertama saya akan membuat payload VBS, yang merupakan skrip VBS sederhana yang dirancang untuk membangun koneksi balik ke server C2, kemudian membuka file Word, mengaktifkan macro, dan menyisipkan payload ke dalam macro. Terakhir, saya akan menyimpan dokumen tersebut.
 
 ![Screenshot from 2024-05-25 18-54-11](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/c6389cb6-2d22-44ec-9bac-bb3db6d153d6)
 
+## Tahap Ketiga (Obfuscation Payload VBS)
 
-## The third stage (Obfuscation VBS payload)
-But before I put the VBS payload in the macro i will make an obfuscate to the scripts to make it difficult to detect and i used online VBScript obfuscator to make obfuscate: https://isvbscriptdead.com/vbs-obfuscator/
-
+Namun, sebelum saya menempatkan payload VBS ke dalam macro, saya akan melakukan obfuscation pada skrip tersebut agar lebih sulit dideteksi, dan saya menggunakan obfuscator VBS online untuk melakukan obfuscation: [VBS Obfuscator](https://isvbscriptdead.com/vbs-obfuscator/)
 
 ![Screenshot from 2024-05-25 18-43-46](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/43336935-c058-4f96-9847-478951c6eccc)
 
+## Tahap Keempat (Teknik Penanaman)
 
-## The fourth stage (implanting technique)
-
-Now i will place the obfuscated VBS payload in the microsoft Word File by opening the View menu clicking on Micros, and creating a new macro file.
+Sekarang saya akan menempatkan payload VBS yang telah di-obfuscate ke dalam file Microsoft Word dengan membuka menu View, mengklik Macros, dan membuat file macro baru.
 
 ![Screenshot from 2024-05-25 18-16-38](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/34e0bade-fc71-4646-ba23-cad761920f96)
 
-Save the Word file with the obfuscated VBScript payload embedded in the macro, thus i will be able to execute for the payload file when opening word file.
+Simpan file Word dengan payload VBScript yang telah di-obfuscate yang tertanam di dalam macro, sehingga saya dapat mengeksekusi file payload ketika membuka file Word tersebut.
 
 ![Screenshot from 2024-05-25 20-04-19](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/5dca0cd3-2ef8-483b-bd38-c1b902c0b5e6)
 
-## The fifth stage (make SFX archive)
 
-Now i will create SFX Archive using WinRAR and take the SFX file that contains the Word Document inside it with obfuscated VBS payload via the macro and send it in a  spear phishing.
+## Tahap Kelima (Membuat Arsip SFX)
 
-1.Open WinRAR and select the files to be included in the archive.
+Sekarang saya akan membuat Arsip SFX menggunakan WinRAR dan mengambil file SFX yang berisi Dokumen Word di dalamnya dengan payload VBS yang telah di-obfuscate melalui macro dan mengirimkannya dalam serangan spear phishing.
 
-2.Go to the "Add" menu and choose "Add to archive..."
+1. Buka WinRAR dan pilih file yang akan dimasukkan dalam arsip.
 
-3.In the "Archive name and parameters" window, select "SFX" as the archive format.
+2. Pergi ke menu "Add" dan pilih "Add to archive..."
 
-4.Configure the SFX options as desired, including the extraction path and execution parameters.
+3. Di jendela "Archive name and parameters", pilih "SFX" sebagai format arsip.
 
-
+4. Atur opsi SFX sesuai keinginan, termasuk jalur ekstraksi dan parameter eksekusi.
 
 ![Screenshot from 2024-05-26 09-23-43](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/dafe9156-4b6f-4712-97de-cd2d4734439b)
 
-## Final result (payload connect to C2-server)
+## Hasil Akhir (Payload Terhubung ke Server C2)
 
-This Perl C2 server script enable to make remote communication by utilizes DES encryption for secure data transmission between the attacker server and the target.
+Skrip C2 Perl ini memungkinkan untuk melakukan komunikasi jarak jauh dengan memanfaatkan enkripsi DES untuk transmisi data yang aman antara server penyerang dan target.
 
-get_attacker_info and get_port: Prompts for the IP address and port number.
+- **get_attacker_info dan get_port**: Meminta alamat IP dan nomor port.
+- **get_des_key**: Meminta kunci DES sepanjang 8 byte.
+- **encrypt_data**: Mengenkripsi hasil perintah menggunakan DES dengan padding.
+- **main**: Menyiapkan server TCP, menerima koneksi, mengeksekusi perintah, mengenkripsi hasil, dan mengirimkannya ke klien.
 
-get_des_key: Prompts for a DES key of 8 bytes.
-
-encrypt_data: Encrypts command results using DES with padding.
-
-main: Sets up a TCP server, accepts connections, executes commands, encrypts results, and sends them to the client.
-
-https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/e226ac70-42de-4f84-9e15-7f8ac2b47836
-
-
-
+[GitHub - SFX Archive dan Payload C2 Server](https://github.com/S3N4T0R-0X0/Primitive-Bear-APT/assets/121706460/e226ac70-42de-4f84-9e15-7f8ac2b47836)
