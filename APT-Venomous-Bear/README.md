@@ -1,99 +1,91 @@
-# Venomous Bear APT Adversary Simulation
+# Simulasi Adversary APT Venomous Bear
 
-This is a simulation of attack by (Venomous Bear) APT group targeting U.S.A, Germany and Afghanista attack campaign was active since at least 2020, The attack chain starts with
-installed the backdoor as a service on the infected machine. They attempted to operate under the radar by naming the service "Windows Time Service", like the existing Windows service. The backdoor can upload and execute files or exfiltrate files from the infected system, and the backdoor contacted the command and control (C2) server via an HTTPS encrypted channel every five seconds to check if there were new commands from the operator. I relied on ‏Cisco Talos Intelligence Group‏ tofigure out the details to make this simulation: https://blog.talosintelligence.com/tinyturla/
+Ini adalah simulasi serangan oleh grup APT (Venomous Bear) yang menargetkan Amerika Serikat, Jerman, dan Afghanistan. Kampanye serangan ini aktif setidaknya sejak tahun 2020. Rantai serangan dimulai dengan memasang backdoor sebagai layanan di mesin yang terinfeksi. Para penyerang mencoba beroperasi secara diam-diam dengan menamai layanan sebagai "Windows Time Service", menyerupai layanan Windows yang sudah ada. Backdoor ini dapat mengunggah dan mengeksekusi file atau mengekstrak file dari sistem yang terinfeksi. Backdoor ini berkomunikasi dengan server command and control (C2) melalui saluran terenkripsi HTTPS setiap lima detik untuk memeriksa apakah ada perintah baru dari operator. Saya mengandalkan informasi dari Cisco Talos Intelligence Group untuk menyusun simulasi ini: https://blog.talosintelligence.com/tinyturla/
 
 ![imageedit_3_4790485345](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/1a56bebb-927d-4286-8257-aa907f240017)
 
-The attackers uses a .BAT file that resembles the Microsoft Windows Time Service, to install the backdoor. The backdoor comes in the form of a service dynamic link library (DLL) called w64time.dll. The description and filename make it look like a valid Microsoft DLL. Once up and running, it allows the attackers to exfiltrate files or upload and execute them, thus functioning as a second-stage postern when needed.
+Para penyerang menggunakan file .BAT yang menyerupai Layanan Waktu Windows Microsoft untuk memasang backdoor. Backdoor ini berbentuk library link dinamis layanan (DLL) yang disebut w64time.dll. Deskripsi dan nama file membuatnya terlihat seperti DLL Microsoft yang valid. Setelah aktif dan berjalan, backdoor ini memungkinkan penyerang mengekstrak file atau mengunggah dan mengeksekusi file, sehingga berfungsi sebagai jalur masuk tahap kedua sesuai kebutuhan.
 
-1. BAT file: The attackers used a .bat file similar to the one below to install the backdoor as a harmless-looking fake Microsoft Windows Time service.
+1. **File BAT**: Para penyerang menggunakan file .bat seperti yang ditunjukkan di bawah ini untuk memasang backdoor sebagai layanan Microsoft Windows Time palsu.
 
-2. DLL backdoor: I have developed a simulation of the backdoor that the attackers used in the actual attack.
+2. **Backdoor DLL**: Saya telah mengembangkan simulasi backdoor yang digunakan para penyerang dalam serangan asli.
 
-3. Backdoor Listener: I was here developed a simple listener script that waits for the incoming connection from the backdoor when it is executed on the target machine.
+3. **Pendengar Backdoor**: Saya juga mengembangkan skrip pendengar sederhana yang menunggu koneksi masuk dari backdoor saat dijalankan di mesin target.
 
-
-
-According to what the Cisco team said, they were not able to identify the method by which this backdoor was installed on the victims’ systems.
+Menurut tim Cisco, mereka tidak dapat mengidentifikasi metode yang digunakan untuk memasang backdoor ini di sistem korban.
 
 ![Screenshot from 2024-06-09 16-11-23](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/3116c5e9-0476-4b93-a672-bc7436abfce0)
 
+## Tahap Pertama (File .BAT)
 
-## The first stage (.BAT file)
-
-The attackers used a .bat file similar to the one below to install the backdoor as a harmless-looking fake Microsoft Windows Time service, the .bat file is also setting the configuration parameters in the registry the backdoor is using.
+Para penyerang menggunakan file .bat seperti yang ditunjukkan di bawah ini untuk memasang backdoor sebagai layanan Microsoft Windows Time palsu. File .bat ini juga mengatur parameter konfigurasi di registry yang digunakan backdoor.
 
 ![Screenshot from 2024-06-07 19-39-16](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/381d1833-3f71-4278-aa56-60952e8d3f55)
 
-I wrote a .bat file identical to the one the attackers used to the one below to install the backdoor as a fake Microsoft Windows Time service.
+Saya menulis file .bat yang identik dengan yang digunakan para penyerang untuk memasang backdoor sebagai layanan Microsoft Windows Time palsu.
 
-These commands add various configuration parameters for the W64Time service to the registry. 
-   
+Perintah-perintah ini menambahkan berbagai parameter konfigurasi untuk layanan W64Time ke registry.
+
     reg add "HKLM\SYSTEM\CurrentControlSet\services\W64Time\Parameters" /v ServiceDll /t REG_EXPAND_SZ /d "%SystemRoot%\system32\w64time.dll" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\services\W64Time\Parameters" /v Hosts /t REG_SZ /d "REMOVED 5050" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\services\W64Time\Parameters" /v Security /t REG_SZ /d "<REMOVED>" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\services\W64Time\Parameters" /v TimeLong /t REG_DWORD /d 300000 /f
     reg add "HKLM\SYSTEM\CurrentControlSet\services\W64Time\Parameters" /v TimeShort /t REG_DWORD /d 5000 /f
 
-    
-ServiceDll: Specifies the DLL that implements the service.
 
-Hosts: Sets the hosts and port (values removed for security).
-
-Security: Configures security settings (value removed for security).
-
-TimeLong: A time-related setting.
- 
-TimeShort: Another time-related setting.  
-
+- **ServiceDll**: Menentukan DLL yang mengimplementasikan layanan.
+- **Hosts**: Mengatur host dan port (nilai dihapus demi keamanan).
+- **Security**: Mengonfigurasi pengaturan keamanan (nilai dihapus demi keamanan).
+- **TimeLong**: Pengaturan terkait waktu.
+- **TimeShort**: Pengaturan terkait waktu lainnya.
 
 ![Screenshot from 2024-06-08 07-18-07](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/a1d9236a-12fc-4008-a9a1-0eedb818d0c9)
 
-This means the malware is running as a service, hidden in the svchost.exe process. The DLL's ServiceMain startup function is doing not much more than executing.
+Ini berarti malware berjalan sebagai layanan yang tersembunyi dalam proses svchost.exe. Fungsi startup `ServiceMain` dari DLL ini tidak melakukan banyak hal selain menjalankan eksekusi.
 
-## The Second stage (DLL backdoor)
 
-"Here, I have developed a simulation of the backdoor that the attackers used in the actual attack."
+## Tahap Kedua (Backdoor DLL)
 
-First, the backdoor reads its configuration from the registry and saves it in the "result" structure, which is later on assigned to the "sConfig" structure.
+"Di sini, saya telah mengembangkan simulasi backdoor yang digunakan oleh para penyerang dalam serangan sebenarnya."
+
+Pertama, backdoor membaca konfigurasi dari registry dan menyimpannya dalam struktur "result", yang kemudian dialokasikan ke struktur "sConfig".
 
 ![Screenshot from 2024-06-08 22-30-51](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/b2164d44-bffd-4c9a-9ebe-574c28104eb0)
 
+Backdoor ini mencakup komponen-komponen berikut:
 
-This backdoor includes the following components:
+1. **Service Control Handler**: Mendaftarkan pengendali kontrol layanan untuk mengelola status layanan.
 
-1.Service Control Handler: Registers a service control handler to manage the service's state.
+2. **Fungsi Utama Malware**: Tempat untuk logika utama dari backdoor.
 
-2.Main Malware Function: Placeholder for the main logic of the backdoor.
+3. **Pembacaan Konfigurasi**: Menginisialisasi konfigurasi dengan placeholder untuk nilai sebenarnya.
 
-3.Configuration Reading: Initializes the configuration with placeholders for actual values.
+4. **Pengambilan Perintah C2**: Mensimulasikan pengambilan perintah dari server Command and Control (C2).
 
-4.C2 Command Retrieval: Simulates retrieving commands from a Command and Control (C2) server.
+5. **Pemrosesan Perintah**: Memproses perintah yang diambil (saat ini disimulasikan).
 
-5.Command Processing: Processes the retrieved commands (currently simulated).
+6. **Loop Layanan**: Secara terus-menerus menghubungkan ke server C2 dan memproses perintah, dengan penanganan kesalahan dan pembersihan.
 
-6.Service Loop: Continuously connects to the C2 server and processes commands, with error handling and cleanup.
-
-Adjust the placeholder values and add the actual logic for backdoor operations and C2 command processing as per your requirements.
+Sesuaikan nilai placeholder dan tambahkan logika sebenarnya untuk operasi backdoor dan pemrosesan perintah C2 sesuai kebutuhan Anda.
 
 ![Screenshot from 2024-06-08 22-34-36](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/1f3eb42d-b546-4d32-9166-851f0dd00fa6)
 
-## The third stage (Backdoor Listener)
 
-I was here developed a simple listener script that waits for the incoming connection from the backdoor when it is executed on the target machine.
+## Tahap Ketiga (Pendengar Backdoor)
 
-Accepts incoming connections: When a client connects, it prints the client's IP address and port.
+Di sini, saya mengembangkan skrip pendengar sederhana yang menunggu koneksi masuk dari backdoor saat dijalankan di mesin target.
 
-Sends the command: Encodes the command as bytes and sends it over the socket.
+- **Menerima koneksi masuk**: Ketika klien terhubung, mencetak alamat IP dan port klien.
 
-Prompts for a command: Asks the user to enter a command to send to the connected client.
+- **Mengirimkan perintah**: Mengenkripsi perintah sebagai byte dan mengirimkannya melalui soket.
 
-Continues reading until no more data is received.
+- **Meminta perintah**: Meminta pengguna untuk memasukkan perintah yang akan dikirim ke klien yang terhubung.
 
-Receives output from the client: Reads data in chunks of 4096 bytes.
+- **Melanjutkan membaca hingga tidak ada data lagi yang diterima.**
 
-Accumulates the data into the output variable.
+- **Menerima output dari klien**: Membaca data dalam ukuran blok 4096 byte.
+
+- **Mengakumulasi data** ke dalam variabel output.
 
 ![Screenshot from 2024-06-09 10-44-07](https://github.com/S3N4T0R-0X0/Venomous-Bear-APT/assets/121706460/41bfa80d-a18a-4bd3-ad6d-f243bd29bece)
 
